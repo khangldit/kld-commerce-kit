@@ -1,0 +1,12 @@
+{
+  "name": "kld-commerce-kit",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "pnpm@10.17.1",
+  "engines": {
+    "node": "24.x"
+  },
+  "scripts": {
+    "dev:api": "pnpm --filter @kld/api start:dev"
+  }
+}
