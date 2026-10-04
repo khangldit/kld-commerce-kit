@@ -8,6 +8,7 @@ export const envSchema = z.object({
   MONGODB_URI: z
     .string()
     .regex(/^mongodb(\+srv)?:\/\//, 'Must be a MongoDB connection string'),
+  ENABLE_SWAGGER: z.stringbool().default(false),
 });
 
 export type Env = z.infer<typeof envSchema>;
