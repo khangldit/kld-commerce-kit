@@ -1,0 +1,14 @@
+@baseUrl = http://localhost:3000
+@store = chu-bay
+
+### Health check
+GET {{baseUrl}}/health
+
+### Store info
+GET {{baseUrl}}/stores/{{store}}
+
+### Catalog
+GET {{baseUrl}}/stores/{{store}}/catalog
+
+### Unknown store -> 404
+GET {{baseUrl}}/stores/not-exist/catalog
