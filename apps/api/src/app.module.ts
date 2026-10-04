@@ -1,18 +1,13 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
-import { validateEnv } from './config/env.js';
-import { HealthModule } from './health/health.modules.js';
+import { CatalogModule } from './catalog/catalog.module.js';
+import { CoreModule } from './core/core.module.js';
+import { HealthModule } from './health/health.module.js';
+import { StoresModule } from './stores/stores.module.js';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      validate: validateEnv,
-    }),
-    HealthModule,
-  ],
+  imports: [CoreModule, HealthModule, StoresModule, CatalogModule],
   controllers: [AppController],
   providers: [AppService],
 })

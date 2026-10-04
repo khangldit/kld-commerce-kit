@@ -5,6 +5,9 @@ export const envSchema = z.object({
     .enum(['development', 'production', 'test'])
     .default('development'),
   PORT: z.coerce.number().int().positive().default(3000),
+  MONGODB_URI: z
+    .string()
+    .regex(/^mongodb(\+srv)?:\/\//, 'Must be a MongoDB connection string'),
 });
 
 export type Env = z.infer<typeof envSchema>;

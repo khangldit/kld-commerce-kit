@@ -66,7 +66,12 @@ kld-commerce-kit/
 - Bug fixes and features go to `main` first, then `main` is merged into each `store/*` branch.
 
 ## Data model (MongoDB)
-- **stores**: `slug`, `name`, `phone`, `telegramChatId`, `paymentQrUrl`, `active`
+- **stores**: `slug`, `name`, `active`, plus grouped sub-documents (all optional unless noted):
+  - `contact`: `phone` (required), `address?`, `mapUrl?`, `mapQrImage?`
+  - `branding`: `logo?`
+  - `payment`: `qrImage?`
+  - `notifications`: `telegramChatId?`
+  - New store settings go into the matching group (or a new group) as optional fields.
 - **categories**: `storeId`, `name`, `slug`, `sortOrder`
 - **products**: `storeId`, `categoryId`, `name`, `slug`, `price`, `image`, `description?`, `isAvailable`, `sortOrder`
 - **order_requests**: `storeSlug`, `code`, `phone`, `name?`, `fulfillment` (`'dine_in' | 'takeaway'`), `table?`, `note?`, `items[{ productId, name, price, qty }]`, `total`, `idempotencyKey` (unique index), `notified`, `createdAt`
@@ -146,3 +151,6 @@ Full `orders` collection with status, variants, inventory, shipping, online paym
   - Workspace packages use the `@kld/` scope (`@kld/api`, later `@kld/shared`, `@kld/web`).
   - Removed `@nestjs/mau` and the `deploy` script — deploying to Render, not Mau.
   - Declined `@nestjs/observe` — logging handled in-house with pino (Lesson 11).
+  - ESM + CJS packages (e.g. mongoose): types via `import type`; values via named import, or default import if Node can't detect the named export.
+  - Store fields grouped into `contact` / `branding` / `payment` / `notifications` sub-documents (`_id: false`) for extensibility.
+  - Seed JSON references categories by slug; image fields store file names only.

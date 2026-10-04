@@ -1,0 +1,58 @@
+{
+  "store": {
+    "slug": "chu-bay",
+    "name": "Quán Ăn Chú Bảy",
+    "contact": {
+      "phone": "0900000000",
+      "address": "123 Example Street, Ho Chi Minh City",
+      "mapUrl": "https://maps.app.goo.gl/example",
+      "mapQrImage": "map-qr.png"
+    },
+    "branding": { "logo": "logo.png" },
+    "payment": { "qrImage": "payment-qr.png" }
+  },
+  "categories": [
+    { "slug": "grilled", "name": "Đồ nướng", "sortOrder": 1 },
+    { "slug": "hotpot", "name": "Lẩu", "sortOrder": 2 },
+    { "slug": "drinks", "name": "Đồ uống", "sortOrder": 3 }
+  ],
+  "products": [
+    {
+      "slug": "grilled-pork-belly",
+      "category": "grilled",
+      "name": "Ba chỉ nướng",
+      "price": 89000,
+      "image": "grilled-pork-belly.jpg",
+      "sortOrder": 1
+    },
+    {
+      "slug": "grilled-squid",
+      "category": "grilled",
+      "name": "Mực nướng",
+      "price": 129000,
+      "sortOrder": 2
+    },
+    {
+      "slug": "thai-hotpot",
+      "category": "hotpot",
+      "name": "Lẩu Thái",
+      "price": 249000,
+      "sortOrder": 1
+    },
+    {
+      "slug": "iced-tea",
+      "category": "drinks",
+      "name": "Trà đá",
+      "price": 5000,
+      "sortOrder": 1
+    },
+    {
+      "slug": "beer-tiger",
+      "category": "drinks",
+      "name": "Bia Tiger",
+      "price": 20000,
+      "isAvailable": false,
+      "sortOrder": 2
+    }
+  ]
+}
