@@ -1,7 +1,10 @@
 @baseUrl = http://localhost:3000
 @store = chu-bay
+@itemA = 6ac26bdec7ea1a1769c5af5d
+@itemB = 6ac26bdec7ea1a1769c5af5e
+@fixedKey = 3f6c2a1e-8b4d-4c1a-9f2e-7a5b6c8d9e01
 
-### Valid order (phone with spaces + extra "price" field)
+### 1. Valid order — run TWICE, must return the same code
 POST {{baseUrl}}/stores/{{store}}/orders
 Content-Type: application/json
 
@@ -9,20 +12,33 @@ Content-Type: application/json
   "phone": "090 123 4567",
   "fulfillment": "dine_in",
   "table": "5",
-  "items": [{ "productId": "64b7f0c2a1b2c3d4e5f60718", "qty": 2, "price": 1 }],
-  "idempotencyKey": "{{$guid}}"
+  "items": [
+    { "productId": "{{itemA}}", "qty": 2 },
+    { "productId": "{{itemB}}", "qty": 1 },
+    { "productId": "{{itemA}}", "qty": 1 }
+  ],
+  "idempotencyKey": "{{fixedKey}}"
 }
 
-### Invalid: bad phone, empty items, unknown fulfillment
+### 2. New order (new key each time) — code increases
 POST {{baseUrl}}/stores/{{store}}/orders
 Content-Type: application/json
 
 {
-  "phone": "123",
-  "fulfillment": "delivery",
-  "items": [],
-  "idempotencyKey": "not-a-uuid"
+  "phone": "0901234567",
+  "fulfillment": "takeaway",
+  "table": "9",
+  "items": [{ "productId": "{{itemB}}", "qty": 1 }],
+  "idempotencyKey": "{{$guid}}"
 }
 
-### Invalid slug format
-GET {{baseUrl}}/stores/Chu_Bay/catalog
+### 3. Unknown product -> 422
+POST {{baseUrl}}/stores/{{store}}/orders
+Content-Type: application/json
+
+{
+  "phone": "0901234567",
+  "fulfillment": "takeaway",
+  "items": [{ "productId": "64b7f0c2a1b2c3d4e5f60718", "qty": 1 }],
+  "idempotencyKey": "{{$guid}}"
+}

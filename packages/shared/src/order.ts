@@ -31,3 +31,21 @@ export const createOrderRequestSchema = z.object({
 
 export type Fulfillment = z.infer<typeof fulfillmentSchema>;
 export type CreateOrderRequest = z.infer<typeof createOrderRequestSchema>;
+
+export const orderResponseItemSchema = z.object({
+  productId: z.string(),
+  name: z.string(),
+  price: z.number().int(),
+  qty: z.number().int(),
+});
+
+export const orderResponseSchema = z.object({
+  code: z.string(),
+  fulfillment: fulfillmentSchema,
+  table: z.string().optional(),
+  items: z.array(orderResponseItemSchema),
+  total: z.number().int(),
+  createdAt: z.iso.datetime(),
+});
+
+export type OrderResponse = z.infer<typeof orderResponseSchema>;
