@@ -7,7 +7,9 @@
     "node": "24.x"
   },
   "scripts": {
-    "dev:api": "pnpm --filter @kld/api start:dev",
-    "seed": "pnpm --filter @kld/api seed"
+    "build": "pnpm -r build",
+    "dev:api": "pnpm --filter @kld/shared build && pnpm --filter @kld/api start:dev",
+    "dev:shared": "pnpm --filter @kld/shared dev",
+    "seed": "pnpm --filter @kld/shared build && pnpm --filter @kld/api seed"
   }
 }

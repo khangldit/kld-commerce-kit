@@ -1,13 +1,11 @@
 import { z } from 'zod';
 
-const slug = z
-  .string()
-  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Use kebab-case: a-z, 0-9 and dashes');
+import { slugSchema } from '@kld/shared';
 
 export const seedFileSchema = z
   .object({
     store: z.object({
-      slug,
+      slug: slugSchema,
       name: z.string().min(1),
       contact: z.object({
         phone: z.string().min(1),
@@ -21,7 +19,7 @@ export const seedFileSchema = z
     categories: z
       .array(
         z.object({
-          slug,
+          slug: slugSchema,
           name: z.string().min(1),
           sortOrder: z.number().int().default(0),
         }),
@@ -29,8 +27,8 @@ export const seedFileSchema = z
       .min(1),
     products: z.array(
       z.object({
-        slug,
-        category: slug,
+        slug: slugSchema,
+        category: slugSchema,
         name: z.string().min(1),
         price: z.number().int().nonnegative(),
         image: z.string().optional(),

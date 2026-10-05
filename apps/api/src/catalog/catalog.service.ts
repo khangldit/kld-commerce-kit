@@ -1,12 +1,9 @@
+import { PublicCatalog, PublicProduct } from '@kld/shared';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import type { Model } from 'mongoose';
 import { StoresService } from '../stores/stores.service.js';
-import {
-  toPublicProduct,
-  type PublicCatalog,
-  type PublicProduct,
-} from './dto/public-catalog.js';
+import { toPublicProduct } from './dto/public-catalog.js';
 import { Category } from './schemas/category.schema.js';
 import { Product } from './schemas/product.schema.js';
 

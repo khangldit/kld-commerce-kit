@@ -1,0 +1,28 @@
+@baseUrl = http://localhost:3000
+@store = chu-bay
+
+### Valid order (phone with spaces + extra "price" field)
+POST {{baseUrl}}/stores/{{store}}/orders
+Content-Type: application/json
+
+{
+  "phone": "090 123 4567",
+  "fulfillment": "dine_in",
+  "table": "5",
+  "items": [{ "productId": "64b7f0c2a1b2c3d4e5f60718", "qty": 2, "price": 1 }],
+  "idempotencyKey": "{{$guid}}"
+}
+
+### Invalid: bad phone, empty items, unknown fulfillment
+POST {{baseUrl}}/stores/{{store}}/orders
+Content-Type: application/json
+
+{
+  "phone": "123",
+  "fulfillment": "delivery",
+  "items": [],
+  "idempotencyKey": "not-a-uuid"
+}
+
+### Invalid slug format
+GET {{baseUrl}}/stores/Chu_Bay/catalog

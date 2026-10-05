@@ -1,6 +1,7 @@
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { cleanupOpenApiDoc } from 'nestjs-zod';
 import { AppModule } from './app.module.js';
 import { Env } from './config/env.js';
 
@@ -17,7 +18,7 @@ async function bootstrap() {
         .setVersion('0.1.0')
         .build(),
     );
-    SwaggerModule.setup('docs', app, document);
+    SwaggerModule.setup('docs', app, cleanupOpenApiDoc(document));
   }
 
   await app.listen(config.get('PORT', { infer: true }));

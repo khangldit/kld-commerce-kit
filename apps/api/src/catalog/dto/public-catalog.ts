@@ -1,26 +1,7 @@
+import { publicCatalogSchema, type PublicProduct } from '@kld/shared';
 import type { Types } from 'mongoose';
+import { createZodDto } from 'nestjs-zod/dto';
 import type { Product } from '../schemas/product.schema.js';
-
-export interface PublicProduct {
-  id: string;
-  slug: string;
-  name: string;
-  price: number;
-  image?: string;
-  description?: string;
-}
-
-export interface PublicCategory {
-  id: string;
-  slug: string;
-  name: string;
-  products: PublicProduct[];
-}
-
-export interface PublicCatalog {
-  store: { slug: string; name: string };
-  categories: PublicCategory[];
-}
 
 export function toPublicProduct(
   product: Product & { _id: Types.ObjectId },
@@ -34,3 +15,5 @@ export function toPublicProduct(
     description: product.description,
   };
 }
+
+export class PublicCatalogDto extends createZodDto(publicCatalogSchema) {}

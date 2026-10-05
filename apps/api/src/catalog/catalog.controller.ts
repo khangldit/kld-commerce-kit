@@ -6,7 +6,10 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
+import { ZodResponse } from 'nestjs-zod';
+import { StoreSlugParamsDto } from '../common/dto/store-slug-params.dto.js';
 import { CatalogService } from './catalog.service.js';
+import { PublicCatalogDto } from './dto/public-catalog.js';
 
 @ApiTags('catalog')
 @Controller('stores/:slug/catalog')
@@ -19,10 +22,11 @@ export class CatalogController {
     description:
       'Categories with their available products, sorted for display.',
   })
+  @ZodResponse({ type: PublicCatalogDto, description: 'Store found' })
   @ApiParam({ name: 'slug', example: 'chu-bay' })
   @ApiOkResponse({ description: 'Categories with nested products' })
   @ApiNotFoundResponse({ description: 'Store not found or inactive' })
-  getCatalog(@Param('slug') slug: string) {
-    return this.catalogService.getCatalog(slug);
+  getCatalog(@Param() params: StoreSlugParamsDto) {
+    return this.catalogService.getCatalog(params.slug);
   }
 }

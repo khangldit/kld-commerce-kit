@@ -1,9 +1,6 @@
+import { publicStoreSchema, type PublicStore } from '@kld/shared';
+import { createZodDto } from 'nestjs-zod/dto';
 import type { Store } from '../schemas/store.schema.js';
-
-export type PublicStore = Pick<
-  Store,
-  'slug' | 'name' | 'contact' | 'branding' | 'payment'
->;
 
 export function toPublicStore(store: Store): PublicStore {
   return {
@@ -14,3 +11,5 @@ export function toPublicStore(store: Store): PublicStore {
     payment: store.payment,
   };
 }
+
+export class PublicStoreDto extends createZodDto(publicStoreSchema) {}
