@@ -1,3 +1,6 @@
+// organize-imports-ignore
+// `reflect-metadata` must be the first import: ESM evaluates imports in order.
+import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
