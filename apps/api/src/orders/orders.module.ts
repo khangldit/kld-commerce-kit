@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CatalogModule } from '../catalog/catalog.module.js';
+import { NotificationsModule } from '../notifications/notifications.module.js';
 import { StoresModule } from '../stores/stores.module.js';
 import { OrderCodeService } from './order-code.service.js';
 import { OrdersController } from './orders.controller.js';
@@ -19,6 +20,7 @@ import {
     ]),
     StoresModule,
     CatalogModule,
+    NotificationsModule,
   ],
   controllers: [OrdersController],
   providers: [OrdersService, OrderCodeService],

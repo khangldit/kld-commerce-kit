@@ -28,7 +28,7 @@ Content-Type: application/json
   "phone": "0901234567",
   "fulfillment": "takeaway",
   "table": "9",
-  "items": [{ "productId": "{{itemB}}", "qty": 1 }],
+  "items": [{ "productId": "{{itemB}}", "qty": 1, "note": "<b>hack</b> & <a href='https://x.com'>link</a>" }],
   "idempotencyKey": "{{$guid}}"
 }
 

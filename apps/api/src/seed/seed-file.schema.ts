@@ -15,6 +15,14 @@ export const seedFileSchema = z
       }),
       branding: z.object({ logo: z.string().optional() }).default({}),
       payment: z.object({ qrImage: z.string().optional() }).default({}),
+      notifications: z
+        .object({
+          telegramChatId: z
+            .string()
+            .regex(/^-?\d+$/)
+            .optional(),
+        })
+        .default({}),
     }),
     categories: z
       .array(

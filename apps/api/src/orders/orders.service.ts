@@ -9,10 +9,17 @@ import { InjectModel } from '@nestjs/mongoose';
 import type { Model, Types } from 'mongoose';
 import { Product } from '../catalog/schemas/product.schema.js';
 import { isDuplicateKeyError } from '../common/mongo-errors.js';
+import {
+  NotifiableStore,
+  OrderNotifier,
+} from '../notifications/order-notifier.js';
 import { StoresService } from '../stores/stores.service.js';
 import { toOrderResponse } from './dto/order-response.js';
 import { OrderCodeService } from './order-code.service.js';
-import { OrderRequest } from './schemas/order-request.schema.js';
+import {
+  OrderRequest,
+  OrderRequestDocument,
+} from './schemas/order-request.schema.js';
 
 @Injectable()
 export class OrdersService {
@@ -21,6 +28,7 @@ export class OrdersService {
   constructor(
     private readonly storesService: StoresService,
     private readonly orderCodeService: OrderCodeService,
+    private readonly notifier: OrderNotifier,
     @InjectModel(OrderRequest.name)
     private readonly orderModel: Model<OrderRequest>,
     @InjectModel(Product.name) private readonly productModel: Model<Product>,
@@ -96,6 +104,7 @@ export class OrdersService {
       this.logger.log(
         `Order ${code} created for "${store.slug}", total ${total}`,
       );
+      await this.notify(store, order);
       return toOrderResponse(order.toObject());
     } catch (error) {
       // Two identical requests raced past step 1 — the unique index caught it
@@ -107,6 +116,26 @@ export class OrdersService {
         if (raced) return raced;
       }
       throw error;
+    }
+  }
+  private async notify(
+    store: NotifiableStore,
+    order: OrderRequestDocument,
+  ): Promise<void> {
+    try {
+      const delivered = await this.notifier.notifyNewOrder(store, order);
+      if (delivered) {
+        await this.orderModel.updateOne(
+          { _id: order._id },
+          { $set: { notified: true } },
+        );
+      }
+    } catch (error) {
+      this.logger.error(
+        `Notification failed for order ${order.code}: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+      );
     }
   }
 

@@ -9,7 +9,8 @@
       "mapQrImage": "map-qr.png"
     },
     "branding": { "logo": "logo.png" },
-    "payment": { "qrImage": "payment-qr.png" }
+    "payment": { "qrImage": "payment-qr.png" },
+    "notifications": { "telegramChatId": "1032766810" }
   },
   "categories": [
     { "slug": "grilled", "name": "Đồ nướng", "sortOrder": 1 },
