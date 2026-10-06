@@ -7,6 +7,9 @@ export class StoreContact {
   phone!: string;
 
   @Prop({ type: String, trim: true })
+  secondaryPhone?: string;
+
+  @Prop({ type: String, trim: true })
   address?: string;
 
   @Prop({ type: String, trim: true })
@@ -14,18 +17,45 @@ export class StoreContact {
 
   @Prop({ type: String })
   mapQrImage?: string;
+
+  @Prop({ type: { lat: Number, lng: Number }, _id: false })
+  geo?: { lat: number; lng: number };
+
+  @Prop({ type: String, trim: true })
+  openingHours?: string; // display text only
+
+  @Prop({ type: String, trim: true })
+  zalo?: string;
+
+  @Prop({ type: String, trim: true })
+  facebook?: string;
 }
 
 @Schema({ _id: false })
 export class StoreBranding {
   @Prop({ type: String })
   logo?: string;
+
+  @Prop({ type: String, trim: true })
+  tagline?: string;
+
+  @Prop({ type: String })
+  coverImage?: string;
 }
 
 @Schema({ _id: false })
 export class StorePayment {
   @Prop({ type: String })
   qrImage?: string;
+
+  @Prop({ type: String, trim: true })
+  bankName?: string;
+
+  @Prop({ type: String, trim: true })
+  accountNumber?: string;
+
+  @Prop({ type: String, trim: true })
+  accountName?: string;
 }
 
 @Schema({ _id: false })

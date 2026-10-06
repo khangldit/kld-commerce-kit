@@ -11,11 +11,14 @@ export function toOrderResponse(
   return {
     code: order.code,
     fulfillment: order.fulfillment,
-    table: order.table,
+    scheduledAt: order.scheduledAt?.toISOString(),
+    partySize: order.partySize,
     items: order.items.map((item) => ({
       productId: item.productId.toString(),
       name: item.name,
       price: item.price,
+      priceMax: item.priceMax,
+      isMarketPrice: item.isMarketPrice,
       qty: item.qty,
     })),
     total: order.total,

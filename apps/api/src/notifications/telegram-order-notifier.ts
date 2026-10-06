@@ -1,4 +1,9 @@
-import { formatVnd } from '@kld/shared';
+import {
+  formatPrice,
+  formatVnd,
+  isPriceEstimate,
+  STORE_TIME_ZONE,
+} from '@kld/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { Env } from '../config/env.js';
@@ -6,6 +11,15 @@ import type { OrderRequest } from '../orders/schemas/order-request.schema.js';
 import { OrderNotifier, type NotifiableStore } from './order-notifier.js';
 
 const TELEGRAM_TIMEOUT_MS = 5000;
+
+const timeFormatter = new Intl.DateTimeFormat('vi-VN', {
+  timeZone: STORE_TIME_ZONE,
+  hour: '2-digit',
+  minute: '2-digit',
+  weekday: 'short',
+  day: '2-digit',
+  month: '2-digit',
+});
 
 function escapeHtml(value: string): string {
   return value
@@ -66,19 +80,36 @@ export class TelegramOrderNotifier extends OrderNotifier {
   private buildMessage(store: NotifiableStore, order: OrderRequest): string {
     const lines = [
       `🛎 <b>Đơn mới #${order.code}</b> — ${escapeHtml(store.name)}`,
-      order.fulfillment === 'dine_in'
-        ? `🍽 Tại bàn${order.table ? `: <b>${escapeHtml(order.table)}</b>` : ''}`
-        : '🥡 Mang về',
-      `📞 ${escapeHtml(order.phone)}${order.name ? ` (${escapeHtml(order.name)})` : ''}`,
+      ...this.fulfillmentLines(order),
+      order.phone
+        ? `📞 ${escapeHtml(order.phone)}${order.name ? ` (${escapeHtml(order.name)})` : ''}`
+        : '🪑 Khách đang ngồi tại quán (không để lại SĐT)',
       '',
       ...order.items.map(
         (item) =>
-          `${item.qty} × ${escapeHtml(item.name)} — ${formatVnd(item.price * item.qty)}`,
+          `${item.qty} × ${escapeHtml(item.name)} — ${formatPrice(item, item.qty)}`,
       ),
       '',
-      `<b>Tổng: ${formatVnd(order.total)}</b>`,
+      order.items.some(isPriceEstimate)
+        ? `<b>Tạm tính (từ): ${formatVnd(order.total)}</b> — có món giá theo con/thời giá`
+        : `<b>Tổng: ${formatVnd(order.total)}</b>`,
     ];
     if (order.note) lines.push(`📝 ${escapeHtml(order.note)}`);
     return lines.join('\n');
+  }
+
+  private fulfillmentLines(order: OrderRequest): string[] {
+    const when = order.scheduledAt
+      ? `<b>${timeFormatter.format(order.scheduledAt)}</b>`
+      : undefined;
+    if (order.fulfillment === 'dine_in') {
+      return when
+        ? [`📅 Đặt bàn: ${when} · ${order.partySize ?? '?'} người`]
+        : ['🍽 Ăn tại quán — ngay bây giờ'];
+    }
+    return [
+      `🛵 Giao tại nhà — ${when ?? 'sớm nhất có thể'}`,
+      `🏠 ${escapeHtml(order.address ?? '')}`,
+    ];
   }
 }

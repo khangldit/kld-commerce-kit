@@ -1,3 +1,4 @@
+import type { CreateOrderRequest } from '@kld/shared';
 import { Body, Controller, Param, Post } from '@nestjs/common';
 import {
   ApiNotFoundResponse,
@@ -32,6 +33,6 @@ export class OrdersController {
     @Param() params: StoreSlugParamsDto,
     @Body() body: CreateOrderRequestDto,
   ) {
-    return this.ordersService.create(params.slug, body);
+    return this.ordersService.create(params.slug, body as CreateOrderRequest);
   }
 }

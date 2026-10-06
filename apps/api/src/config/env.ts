@@ -11,6 +11,16 @@ export const envSchema = z
       .regex(/^mongodb(\+srv)?:\/\//, 'Must be a MongoDB connection string'),
     ENABLE_SWAGGER: z.stringbool().default(false),
     TELEGRAM_BOT_TOKEN: z.string().min(1).optional(),
+    // Comma-separated storefront origins allowed to call the API from a browser
+    CORS_ORIGINS: z
+      .string()
+      .default('http://localhost:3001')
+      .transform((value) =>
+        value
+          .split(',')
+          .map((origin) => origin.trim())
+          .filter(Boolean),
+      ),
   })
   .refine((env) => env.NODE_ENV !== 'production' || env.TELEGRAM_BOT_TOKEN, {
     message: 'TELEGRAM_BOT_TOKEN is required in production',

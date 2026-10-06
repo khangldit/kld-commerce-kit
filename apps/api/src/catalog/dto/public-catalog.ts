@@ -11,8 +11,11 @@ export function toPublicProduct(
     slug: product.slug,
     name: product.name,
     price: product.price,
+    priceMax: product.priceMax,
+    isMarketPrice: product.isMarketPrice ?? false,
     image: product.image,
     description: product.description,
+    isFeatured: product.isFeatured ?? false,
   };
 }
 

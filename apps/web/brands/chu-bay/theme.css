@@ -1,0 +1,38 @@
+/* Quán Ăn Chú Bảy — miền Tây rustic. Reskin a store by editing these tokens only. */
+:root[data-brand='chu-bay'] {
+  --c-bg: #f5eee2;
+  --c-bg-sunk: #ece2d2;
+  --c-surface: #fffcf6;
+  --c-ink: #2a1e15;
+  --c-ink-2: #6b5848;
+  --c-ink-3: #a39183;
+  --c-line: #e3d5bf;
+  --c-line-soft: #efe6d7;
+
+  --c-primary: #1e4a5b;
+  --c-primary-hover: #17492f;
+  --c-primary-soft: #e1ebdf;
+  --c-on-primary: #fffcf6;
+
+  --c-accent: #c4471d;
+  --c-accent-soft: #f8e1d3;
+  --c-on-accent: #fffcf6;
+  --c-price: #a33a15;
+
+  --c-danger: #b42318;
+  --c-danger-soft: #fce8e4;
+  --c-warn-soft: #fbf0d3;
+
+  --c-hero-bg: #1e4d36;
+  --c-on-hero: #fff8ec;
+  --c-hero-eyebrow: #f3c9a0;
+  --c-footer: #2a1e15;
+  --c-on-footer: #f1e6d4;
+  --c-footer-2: #b8a693;
+
+  /* Image placeholders, cycled per category */
+  --c-tint-1: #f2dcc8;
+  --c-tint-2: #f3e4bc;
+  --c-tint-3: #d8e6e1;
+  --c-tint-4: #e7e1c9;
+}

@@ -53,28 +53,45 @@ kld-commerce-kit/
 ├─ apps/
 │  ├─ api/              # NestJS — deployed once, shared by all stores
 │  └─ web/              # Next.js storefront template (later)
-│     └─ brand/         # the ONLY folder a store branch may modify
+│     └─ brands/<slug>/ # per-store branding (config, theme, assets)
 ├─ packages/
 │  └─ shared/           # Zod schemas + types shared by api and web
 └─ seed/
    └─ stores/<slug>.json
 ```
 
-## Branch strategy
-- `main`: all logic, the API, and the storefront template.
-- `store/<slug>` (e.g. `store/chu-bay`): only changes `apps/web/brand/` (`brand.config.ts`, `theme.css`, `assets/`).
-- Bug fixes and features go to `main` first, then `main` is merged into each `store/*` branch.
+## Branch & multi-store strategy
+- Single branch `main`. No per-store branches, no forks.
+- The storefront picks its store through one function, `getStoreSlug()` (reads `STORE_SLUG` env now; can switch to hostname-based multi-tenancy later without touching other code).
+- Per-store branding lives in `apps/web/brands/<slug>/` (config, theme CSS variables, logo, images, optional component overrides). Store data lives in `seed/stores/<slug>.json`.
+- Store-specific features are toggled by store config in the DB, never by forking code.
+- Adding a store: seed JSON → `pnpm seed <slug>` → `brands/<slug>/` → new hosting project with `STORE_SLUG` + domain → add domain to API CORS whitelist. No code changes.
+
+## Service packages & build modes
+| Package | Runs on | Ordering | Build |
+|---|---|---|---|
+| Basic (one-time, handed over) | Customer's own hosting account, static site, no backend | Cart → message sent via Zalo / phone call | `ORDER_MODE=messenger`, static export, menu baked from JSON |
+| Care (yearly) | Our platform (shared API, Telegram, stored orders) | `POST /orders` | `ORDER_MODE=api` |
+| Pro (admin, inventory) | Our platform | Same as Care + admin features | `ORDER_MODE=api` |
+- Basic: we store no data and run nothing after handover; the customer owns domain + hosting and registers the site with Bộ Công Thương.
+- Care/Pro: we operate the platform and hold customers' personal data — needs a proper contract/terms (legal review before the first paying customer). Domains always registered in the customer's name.
+- Quán Ăn Chú Bảy = Care package (`ORDER_MODE=api`).
+- Hosting note: Vercel Hobby is non-commercial only — use Vercel Pro or a commercial-friendly free host (decide at deploy time). API on Render; upgrade off the free tier at go-live so it doesn't sleep.
+
+## Repository plan
+- Now: one private monorepo (`apps/api`, `apps/web`, `packages/shared`; `apps/landing` later).
+- Later (trigger: second customer, or API contract stable for a few weeks): freeze API as `v1`, publish `@kld/shared`, split into a public platform repo (API, landing, shared) and a private clients repo (storefront + customer brands).
 
 ## Data model (MongoDB)
 - **stores**: `slug`, `name`, `active`, plus grouped sub-documents (all optional unless noted):
-  - `contact`: `phone` (required), `address?`, `mapUrl?`, `mapQrImage?`
-  - `branding`: `logo?`
+  - `contact`: `phone` (required), `address?`, `mapUrl?`, `mapQrImage?`, `openingHours?` (display text), `zalo?`, `facebook?`
+  - `branding`: `logo?`, `tagline?`, `coverImage?`
   - `payment`: `qrImage?`
   - `notifications`: `telegramChatId?`
   - New store settings go into the matching group (or a new group) as optional fields.
 - **categories**: `storeId`, `name`, `slug`, `sortOrder`
-- **products**: `storeId`, `categoryId`, `name`, `slug`, `price`, `image`, `description?`, `isAvailable`, `sortOrder`
-- **order_requests**: `storeId`, `code`, `phone`, `name?`, `fulfillment` (`'dine_in' | 'takeaway'`), `table?`, `note?`, `items[{ productId, name, price, qty }]`, `total`, `idempotencyKey` (unique index), `notified`, `createdAt`
+- **products**: `storeId`, `categoryId`, `name`, `slug`, `price` (lowest price; 0 for market price), `priceMax?` (price range), `isMarketPrice` ("Thời giá"), `image`, `description?`, `isAvailable`, `isFeatured`, `sortOrder`
+- **order_requests**: `storeId`, `code`, `phone`, `name?`, `fulfillment` (`'dine_in' | 'delivery'`), `scheduledAt?`, `partySize?`, `address?` (delivery only), `note?`, `items[{ productId, name, price, qty }]`, `total`, `idempotencyKey` (unique index), `notified`, `createdAt`
 
 ### Conventions
 - Money is stored as integer VND. Never floats.
@@ -101,11 +118,23 @@ kld-commerce-kit/
 
 If Telegram fails, the order is still saved and the customer still gets a success response.
 
+**Order request contract (Phase 1B version):** discriminated union on `fulfillment`:
+- `dine_in`: `scheduledAt?` (ISO with offset; absent = now, i.e. already at the table), `partySize?` (required when `scheduledAt` is set = reservation), `phone?` (optional only when there is no `scheduledAt`; required for reservations).
+- `delivery` ("Đặt giao tại nhà"): `address` (required), `scheduledAt?` (delivery time; absent = as soon as possible). Delivery fee is confirmed by phone, not computed.
+- Server checks `scheduledAt` is in the future and within ~30 days (Asia/Ho_Chi_Minh). Opening hours are display-only (not enforced) in v1.
+- No `table` field. Table context travels inside `note` (see below).
+
 **Checkout v1:**
-- Required: phone number.
-- Optional: name, dine-in or takeaway, table number, note.
-- The store calls back to confirm or request a deposit.
-- Payment: show the store's static QR image.
+- Required: phone number — except table mode (dine-in "now" from a table QR), where only the note is shown. Optional: name, note.
+- Dine-in: "Now" or pick date/time + party size. Delivery: "As soon as possible" or pick date/time; address required.
+- Success view: order code, server total, "the store will call to confirm and explain any deposit".
+- Payment is NOT part of the checkout flow. The store's payment QR (bank info) lives in the store info area (footer / "Payment info" popup).
+
+**Table QR (frontend-only feature):**
+- Table QR codes link to the storefront with a short param, e.g. `?t=Ban-02-Sanh-01`.
+- When `t` is present → table mode: fulfillment locked to dine-in "now", delivery / date-time / party-size UI hidden, label shown as a read-only chip; small "Not at the table?" link exits table mode.
+- Table mode comes from the URL only (no browser storage): every internal link carries `t` along; opening the site without `t` = remote order. Label sanitized and capped (~60 chars). "Not at the table?" removes `t` from the URL.
+- Frontend composes the note: `[<label>] <customer note>` (no "Note:" prefix — Telegram already shows 📝). Customer note max length = 500 − prefix length.
 
 ## Out of scope (for now)
 Admin, auth, variants/options, inventory, shipping, online payment, customer accounts, Zalo, QR with embedded amount, order status.
@@ -134,17 +163,44 @@ Admin, auth, variants/options, inventory, shipping, online payment, customer acc
 - [ ] Lesson 14: Testing — unit tests (pricing, code generation) + e2e tests (supertest + mongodb-memory-server).
 - [ ] Lesson 15: Production — build, deploy to Render, production env, health checks, GitHub Actions CI.
 
+### Delivery order (decided: ship first, get customers, then iterate)
+1. Phase 1B — storefront for Chú Bảy (`apps/web`, `ORDER_MODE=api`, `brands/chu-bay`), add Turborepo.
+2. Lesson 12 (security) + Lesson 15 (deploy) — required before real customers.
+3. Go live for Chú Bảy.
+4. Lessons 13 (performance) + 14 (testing).
+5. `ORDER_MODE=messenger` static build for the Basic package.
+6. `apps/landing` — packages, portfolio, live demos.
+7. API `v1`, publish `@kld/shared`, split repos.
+
 ### Phase 1B — Frontend
-Next.js storefront consuming the deployed API, add Turborepo, `brand/` folder, create `store/chu-bay`, go live for the store.
+Two routes: `/` (store hero ~20–30% + menu) and `/order` (order form + success view).
+- Header: logo + store name + cart button. Footer: store info (address, map, hours, contacts, payment info) + platform credit "Website by Cà Chua Studio 🍅 · Liên hệ làm web" linking to the studio's Zalo contact.
+- Platform credit lives in ONE place (`apps/web/src/config/platform.ts`), not in `brands/<slug>/` — it is the same for every store. Credit link: `target="_blank" rel="noopener nofollow"`.
+- Menu: sticky category tab row that FILTERS the grid client-side: `[⭐ Featured] [All] [<categories>...]`.
+  - Default tab = Featured (products with `isFeatured`); hidden when the store has none → default All.
+  - "All" shows every category as a section with a full-width section title (category name + item count), in category `sortOrder`.
+  - Search ignores the active tab and searches the whole menu (accent-insensitive).
+  - Selected tab in the URL (`?c=<slug>`), read on the client via `useSearchParams` inside `<Suspense>` (never `searchParams` in `page.tsx`, to keep SSG). All items are server-rendered; filtering only hides/shows.
+  - Naming: "Featured / Món nổi bật", not "Best seller" (no sales data yet; a data-driven best-seller tab can come later from `order_requests`).
+- Product card (horizontal): fixed square image on the left (brand placeholder when no image, so the grid stays aligned); right side: name (2-line clamp), optional 1-line description, bottom row with price (left) and "Add" button (right) that turns into a `[- n +]` stepper.
+- Grid columns: <640px 1 col · 640–1023px 2 cols · ≥1024px 2 cols + right panel · ≥1440px 3 cols + right panel.
+- Backend addition for 1B.1: `products.isFeatured` (boolean, default false).
+- Selected-items panel: sticky right column on ≥1024px; on mobile a bottom bar that opens the same panel as a bottom sheet. CTA "Order" → `/order`.
+- Styling: Tailwind, brand colors via CSS variables from `brands/<slug>/theme.css`.
+- Server Components by default; client components only for interactive islands (cart, steppers, tabs, search, form).
+- Catalog via SSG/ISR from the API; cart (Zustand + `localStorage`, keyed by store) keeps name/price snapshots for display; server total is authoritative.
+- `idempotencyKey` created when checkout starts, kept until success; errors handled by `code` (`PRODUCTS_UNAVAILABLE`, `VALIDATION_FAILED`).
+- Warm up `/health` when `/order` opens. SEO: metadata from store + JSON-LD `Restaurant`/`Menu`.
+- Step 1B.1 is a backend update: new store fields + new order contract.
 
 ### Phase 2
-Second store (to prove the kit is reusable) → Admin (JWT, product CRUD, order list, image upload) → Telegram confirm button, Zalo, QR with embedded amount.
+Second store (proves the kit is reusable) → Admin (JWT, product CRUD, order list, `notified: false` view, image upload) → Telegram confirm button, Zalo, QR with embedded amount.
 
 ### Phase 3
 Full `orders` collection with status, variants, inventory, shipping, online payment, customer accounts.
 
 ## Progress
-- **Current lesson:** Lesson 12 (Tier 2 complete)
+- **Current step:** Phase 1B — storefront built (`apps/web`, Turborepo); next: real store data/images, then Lesson 12 + 15 before go-live
 - **Decisions log:**
   - Node 24 LTS (`.nvmrc`, `engines`), pnpm pinned via Corepack (`packageManager`).
   - API scaffolded with Nest CLI: ESM + Vitest (instead of CJS + Jest), oxlint instead of ESLint.
@@ -168,4 +224,16 @@ Full `orders` collection with status, variants, inventory, shipping, online paym
   - Every entry point (`main.ts`, `seed.ts`, test setup) imports `reflect-metadata` on its first line.
   - Logging: `nestjs-pino` in `CoreModule` (pretty in dev, JSON in prod), `bufferLogs` + `app.useLogger`. Request id from `x-request-id` (≤100 chars) or a UUID, echoed in the response header. Serializers allowlist `id/method/url/statusCode`; no bodies or headers logged; `/health` not auto-logged.
   - Errors: one format `{ statusCode, code, message, details?, requestId? }` (`apiErrorSchema` in shared; frontend switches on `code`). Throw `AppException(status, code, message, details?)` for business errors. `AllExceptionsFilter` (`APP_FILTER`) maps Zod/HTTP/unknown errors; 5xx return a generic message and are logged with stack; 4xx are not logged as errors.
+  - Business brand: **Cà Chua Studio** (customer-facing name for the web service; `kld-commerce-kit` stays as the repo/project name). Temporary contact = owner's personal Zalo; to be replaced by a business number / Zalo OA later.
+  - Table numbers are not modelled: table QR → `?t=<label>` → frontend table mode + `[label]` prefix in the note.
   - Order request: client sends only `productId` + `qty` (no prices); phone normalized then validated as a VN number; all inputs bounded (max items, qty, note length); `idempotencyKey` is a client-generated UUID.
+  - Fulfillment `takeaway` replaced by `delivery` ("Đặt giao tại nhà", address required). Both dine-in and delivery can pick a date + time slot.
+  - Storefront: Next.js 16 with `cacheComponents`; store + catalog fetched with `'use cache'` (5-minute revalidate), validated with the shared Zod schemas. Cart = Zustand persisted per store (`kld:cart:<slug>`), idempotency key in `sessionStorage`; table mode is URL-only (`?t=`).
+  - Store info gained `contact.openingHours/zalo/facebook`, `branding.tagline/coverImage`, `payment.bankName/accountNumber/accountName`; products gained `isFeatured`.
+  - API CORS whitelist via `CORS_ORIGINS` (comma-separated, default `http://localhost:3001`).
+  - Real Chú Bảy menu (docs/menu1.html, menu2.html): 17 categories, 83 items. Combos are regular products in a "Combo" category; their description lists each dish + price, one per line.
+  - Price ranges ("150–200K") → `price` = low, `priceMax` = high; "Thời giá"/"Theo phần" → `isMarketPrice: true`, `price: 0`. Order items snapshot both; the total is then a minimum ("Tạm tính (từ)") and the store quotes the final price by phone.
+  - An item listed in two printed sections (e.g. grilled dishes under both "Món Bò" and "Món Nướng") lives in ONE category only — a product has a single `categoryId`.
+  - Product cards with a description open a detail popup (photo, full description, price, add/stepper).
+  - Table mode hides everything about calling back: no phone/name fields, no deposit/call-back notes, no "call the store" button on success; Telegram shows "Khách đang ngồi tại quán". `order_requests.phone` is therefore optional.
+  - Featured products get a diagonal corner ribbon (text from `brands/<slug>/config.ts` `featuredBadge`; Chú Bảy = "HOT") everywhere except the Featured tab. The tab itself stays named "Món nổi bật".

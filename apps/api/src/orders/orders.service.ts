@@ -1,13 +1,18 @@
-import type { CreateOrderRequest, OrderResponse } from '@kld/shared';
+import {
+  isScheduleInRange,
+  type CreateOrderRequest,
+  type OrderResponse,
+} from '@kld/shared';
 import {
   ConflictException,
+  HttpStatus,
   Injectable,
   Logger,
-  UnprocessableEntityException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import type { Model, Types } from 'mongoose';
 import { Product } from '../catalog/schemas/product.schema.js';
+import { AppException } from '../common/app.exception.js';
 import { isDuplicateKeyError } from '../common/mongo-errors.js';
 import {
   NotifiableStore,
@@ -40,6 +45,24 @@ export class OrdersService {
   ): Promise<OrderResponse> {
     const store = await this.storesService.findActiveBySlug(storeSlug);
 
+    // 0. Scheduled time must be in the accepted window (Zod checks the format only)
+    const scheduledAt = input.scheduledAt
+      ? new Date(input.scheduledAt)
+      : undefined;
+    if (scheduledAt && !isScheduleInRange(scheduledAt)) {
+      throw new AppException(
+        HttpStatus.BAD_REQUEST,
+        'VALIDATION_FAILED',
+        'Request validation failed',
+        [
+          {
+            path: 'scheduledAt',
+            message: 'Must be in the future and within 30 days',
+          },
+        ],
+      );
+    }
+
     // 1. Idempotency: a repeated key returns the order already created
     const existing = await this.findByIdempotencyKey(
       input.idempotencyKey,
@@ -60,7 +83,7 @@ export class OrdersService {
     // 3. Load products: must belong to THIS store and be available
     const products = await this.productModel
       .find({ _id: { $in: productIds }, storeId: store._id, isAvailable: true })
-      .select({ name: 1, price: 1 })
+      .select({ name: 1, price: 1, priceMax: 1, isMarketPrice: 1 })
       .lean();
     const productsById = new Map(products.map((p) => [p._id.toString(), p]));
 
@@ -68,10 +91,12 @@ export class OrdersService {
       (id) => !productsById.has(id),
     );
     if (unavailableProductIds.length > 0) {
-      throw new UnprocessableEntityException({
-        message: 'Some products are unavailable',
-        unavailableProductIds,
-      });
+      throw new AppException(
+        HttpStatus.UNPROCESSABLE_ENTITY,
+        'PRODUCTS_UNAVAILABLE',
+        'Some products are unavailable',
+        { unavailableProductIds },
+      );
     }
 
     // 4. Prices come from the DB, never from the client
@@ -81,6 +106,8 @@ export class OrdersService {
         productId: product._id,
         name: product.name,
         price: product.price,
+        priceMax: product.priceMax,
+        isMarketPrice: product.isMarketPrice || undefined,
         qty: qtyByProduct.get(id)!,
       };
     });
@@ -95,7 +122,12 @@ export class OrdersService {
         phone: input.phone,
         name: input.name,
         fulfillment: input.fulfillment,
-        table: input.fulfillment === 'dine_in' ? input.table : undefined,
+        scheduledAt,
+        partySize:
+          input.fulfillment === 'dine_in' && scheduledAt
+            ? input.partySize
+            : undefined,
+        address: input.fulfillment === 'delivery' ? input.address : undefined,
         note: input.note,
         items,
         total,

@@ -1,0 +1,109 @@
+@import 'tailwindcss';
+
+/* Structural tokens shared by every brand. Colors come from brands/<slug>/theme.css. */
+:root {
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --r-xl: 22px;
+  --r-pill: 999px;
+
+  --sh-card: 0 1px 0 rgba(42, 30, 21, 0.05);
+  --sh-panel: 0 8px 28px -12px rgba(42, 30, 21, 0.22);
+  --sh-float: 0 14px 30px -10px rgba(20, 45, 30, 0.55);
+  --sh-modal: 0 28px 70px -16px rgba(0, 0, 0, 0.45);
+
+  /* Sticky offsets: header 60px + category tab bar 65px */
+  --header-h: 60px;
+  --tabs-h: 65px;
+}
+
+@theme inline {
+  --color-bg: var(--c-bg);
+  --color-bg-sunk: var(--c-bg-sunk);
+  --color-surface: var(--c-surface);
+  --color-ink: var(--c-ink);
+  --color-ink-2: var(--c-ink-2);
+  --color-ink-3: var(--c-ink-3);
+  --color-line: var(--c-line);
+  --color-line-soft: var(--c-line-soft);
+  --color-primary: var(--c-primary);
+  --color-primary-hover: var(--c-primary-hover);
+  --color-primary-soft: var(--c-primary-soft);
+  --color-on-primary: var(--c-on-primary);
+  --color-accent: var(--c-accent);
+  --color-accent-soft: var(--c-accent-soft);
+  --color-on-accent: var(--c-on-accent);
+  --color-price: var(--c-price);
+  --color-danger: var(--c-danger);
+  --color-danger-soft: var(--c-danger-soft);
+  --color-warn-soft: var(--c-warn-soft);
+  --color-hero: var(--c-hero-bg);
+  --color-on-hero: var(--c-on-hero);
+  --color-hero-eyebrow: var(--c-hero-eyebrow);
+  --color-footer: var(--c-footer);
+  --color-on-footer: var(--c-on-footer);
+  --color-footer-2: var(--c-footer-2);
+
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
+  --radius-xl: var(--r-xl);
+  --radius-pill: var(--r-pill);
+
+  --shadow-card: var(--sh-card);
+  --shadow-panel: var(--sh-panel);
+  --shadow-float: var(--sh-float);
+  --shadow-modal: var(--sh-modal);
+
+  --font-head: var(--font-bitter), Georgia, serif;
+  --font-body: var(--font-be-vietnam), system-ui, sans-serif;
+
+  /* 1 col → 2 cols (sm) → 2 cols + panel (lg) → 3 cols + panel (xxl) */
+  --breakpoint-xxl: 90rem;
+}
+
+html {
+  background: var(--c-bg);
+  scroll-padding-top: calc(var(--header-h) + var(--tabs-h));
+}
+
+body {
+  margin: 0;
+  background: var(--c-bg);
+  color: var(--c-ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+
+input,
+textarea,
+button,
+select {
+  font: inherit;
+}
+
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--c-primary);
+  outline-offset: 2px;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Woven-mat texture used behind the hero */
+.bg-woven {
+  background-image:
+    repeating-linear-gradient(45deg, rgba(255, 248, 236, 0.05) 0 7px, transparent 7px 14px),
+    repeating-linear-gradient(-45deg, rgba(255, 248, 236, 0.035) 0 7px, transparent 7px 14px);
+}

@@ -7,9 +7,15 @@
     "node": "24.x"
   },
   "scripts": {
-    "build": "pnpm -r build",
-    "dev:api": "pnpm --filter @kld/shared build && pnpm --filter @kld/api start:dev",
-    "dev:shared": "pnpm --filter @kld/shared dev",
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "dev:api": "turbo dev --filter=@kld/api",
+    "dev:web": "turbo dev --filter=@kld/web",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
     "seed": "pnpm --filter @kld/shared build && pnpm --filter @kld/api seed"
+  },
+  "devDependencies": {
+    "turbo": "^2.11.7"
   }
 }

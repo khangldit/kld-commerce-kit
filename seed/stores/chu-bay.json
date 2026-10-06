@@ -3,57 +3,747 @@
     "slug": "chu-bay",
     "name": "Quán Ăn Chú Bảy",
     "contact": {
-      "phone": "0900000000",
-      "address": "123 Example Street, Ho Chi Minh City",
-      "mapUrl": "https://maps.app.goo.gl/example",
-      "mapQrImage": "map-qr.png"
+      "phone": "0784108838",
+      "secondaryPhone": "0917437207",
+      "address": "68/4 Ấp Bình Lương 1, Xã Thủ Thừa, Tây Ninh",
+      "mapUrl": "https://maps.app.goo.gl/JMGqFNVPSsvA698Y7",
+      "geo": {
+        "lat": 10.5897623,
+        "lng": 106.4068949
+      }
     },
-    "branding": { "logo": "logo.png" },
-    "payment": { "qrImage": "payment-qr.png" },
-    "notifications": { "telegramChatId": "1032766810" }
+    "branding": {
+      "logo": "logo.png",
+      "tagline": "Ngon dân dã • Đậm vị miền Tây • Giá bình dân",
+      "coverImage": "banner.jpg"
+    },
+    "payment": {},
+    "notifications": {
+      "telegramChatId": "1032766810"
+    }
   },
   "categories": [
-    { "slug": "grilled", "name": "Đồ nướng", "sortOrder": 1 },
-    { "slug": "hotpot", "name": "Lẩu", "sortOrder": 2 },
-    { "slug": "drinks", "name": "Đồ uống", "sortOrder": 3 }
+    {
+      "slug": "combo",
+      "name": "Combo",
+      "sortOrder": 1
+    },
+    {
+      "slug": "khai-vi",
+      "name": "Khai Vị",
+      "sortOrder": 2
+    },
+    {
+      "slug": "mon-goi",
+      "name": "Món Gỏi",
+      "sortOrder": 3
+    },
+    {
+      "slug": "mon-mi",
+      "name": "Món Mì",
+      "sortOrder": 4
+    },
+    {
+      "slug": "mon-com",
+      "name": "Món Cơm",
+      "sortOrder": 5
+    },
+    {
+      "slug": "mon-ga",
+      "name": "Món Gà",
+      "sortOrder": 6
+    },
+    {
+      "slug": "mon-ca",
+      "name": "Món Cá",
+      "sortOrder": 7
+    },
+    {
+      "slug": "mon-tom",
+      "name": "Món Tôm",
+      "sortOrder": 8
+    },
+    {
+      "slug": "mon-bo",
+      "name": "Món Bò",
+      "sortOrder": 9
+    },
+    {
+      "slug": "mon-heo",
+      "name": "Món Heo",
+      "sortOrder": 10
+    },
+    {
+      "slug": "mon-ech",
+      "name": "Món Ếch",
+      "sortOrder": 11
+    },
+    {
+      "slug": "mon-nuong",
+      "name": "Món Nướng",
+      "sortOrder": 12
+    },
+    {
+      "slug": "dong-que",
+      "name": "Đồng Quê",
+      "sortOrder": 13
+    },
+    {
+      "slug": "mon-vit",
+      "name": "Món Vịt",
+      "sortOrder": 14
+    },
+    {
+      "slug": "mon-lau",
+      "name": "Món Lẩu",
+      "sortOrder": 15
+    },
+    {
+      "slug": "kho-ca-lai-rai",
+      "name": "Khô Cá Lai Rai",
+      "sortOrder": 16
+    },
+    {
+      "slug": "bia-giai-khat",
+      "name": "Bia · Giải Khát",
+      "sortOrder": 17
+    }
   ],
   "products": [
     {
-      "slug": "grilled-pork-belly",
-      "category": "grilled",
-      "name": "Ba chỉ nướng",
+      "slug": "combo-01",
+      "category": "combo",
+      "name": "Combo 01 – Hải Sản & Lai Rai",
+      "description": "• Mì hải sản — 150K\n• Gỏi tôm thịt — 150K\n• Tôm nướng mọi — 150K\n• Cá lóc chiên — 150K\n• Cá đuối 1 nắng ★ — 150K\n• Rau luộc kho quẹt — 89K\n• Lẩu gà — 200K",
+      "price": 1039000,
+      "isFeatured": false,
+      "sortOrder": 1
+    },
+    {
+      "slug": "combo-02",
+      "category": "combo",
+      "name": "Combo 02 – Dân Dã Đồng Quê",
+      "description": "• Gỏi chân gà bóp thấu — 150K\n• Chuột chiên sả ★ — 150K\n• Tép chiên bột — 150K\n• Vú heo chiên mắm — 150K\n• Bắp bò nướng — 200K\n• Cá đuối 1 nắng ★ — 150K\n• Lẩu gà — 250K",
+      "price": 1200000,
+      "isFeatured": false,
+      "sortOrder": 2
+    },
+    {
+      "slug": "combo-03",
+      "category": "combo",
+      "name": "Combo 03 – Món Nhậu Chiến Hữu",
+      "description": "• Rau luộc kho quẹt — 89K\n• Dồi trường xào cải chua — 150K\n• Phèo bò nướng — 200K\n• Vú heo nướng — 200K\n• Tôm nướng muối ớt — 150K\n• Gỏi bò bóp thấu ★ — 150K\n• Cá đuối 1 nắng ★ — 150K\n• Lẩu hải sản — 200K",
+      "price": 1289000,
+      "isFeatured": false,
+      "sortOrder": 3
+    },
+    {
+      "slug": "combo-04",
+      "category": "combo",
+      "name": "Combo 04 – Tiệc Gia Đình",
+      "description": "• Khổ qua xào trứng — 70K\n• Mì hải sản — 150K\n• Bò xào củ hành — 150K\n• Tôm hấp bia — 150K\n• Cá tai tượng chiên — 250K\n• Combo nướng tam ca ★ — 250K\n• Lẩu hải sản — 250K",
+      "price": 1270000,
+      "isFeatured": false,
+      "sortOrder": 4
+    },
+    {
+      "slug": "combo-05",
+      "category": "combo",
+      "name": "Combo 05 – Best Seller Chú Bảy",
+      "description": "• Cơm trùm mền — 89K\n• Rau luộc kho quẹt — 89K\n• Cá đuối 1 nắng ★ — 150K\n• Combo nướng tam ca ★ — 300K\n• Gỏi bò bóp thấu ★ — 150K\n• Tôm nướng mọi — 150K\n• Bò xào khổ qua — 150K\n• Gà nổ muối ★ — 250K\n• Lẩu hải sản — 250K",
+      "price": 1578000,
+      "isFeatured": true,
+      "sortOrder": 5
+    },
+    {
+      "slug": "rau-luoc-kho-quet",
+      "category": "khai-vi",
+      "name": "Rau luộc kho quẹt",
       "price": 89000,
-      "image": "grilled-pork-belly.jpg",
       "sortOrder": 1
     },
     {
-      "slug": "grilled-squid",
-      "category": "grilled",
+      "slug": "dau-chien-sa",
+      "category": "khai-vi",
+      "name": "Đậu chiên sả",
+      "price": 50000,
+      "sortOrder": 2
+    },
+    {
+      "slug": "dau-tam-hanh",
+      "category": "khai-vi",
+      "name": "Đậu tẩm hành",
+      "price": 50000,
+      "sortOrder": 3
+    },
+    {
+      "slug": "kho-qua-xao-trung",
+      "category": "khai-vi",
+      "name": "Khổ qua xào trứng",
+      "price": 70000,
+      "sortOrder": 4
+    },
+    {
+      "slug": "dau-rong-xao-toi",
+      "category": "khai-vi",
+      "name": "Đậu rồng xào tỏi",
+      "price": 60000,
+      "sortOrder": 5
+    },
+    {
+      "slug": "ca-trao-dong-muoi-sa",
+      "category": "khai-vi",
+      "name": "Cá trào đồng muối sả",
+      "price": 150000,
+      "sortOrder": 6
+    },
+    {
+      "slug": "goi-chan-ga-bop-thau",
+      "category": "mon-goi",
+      "name": "Gỏi chân gà bóp thấu",
+      "price": 150000,
+      "sortOrder": 1
+    },
+    {
+      "slug": "goi-bo-bop-thau",
+      "category": "mon-goi",
+      "name": "Gỏi bò bóp thấu",
+      "price": 150000,
+      "isFeatured": true,
+      "sortOrder": 2
+    },
+    {
+      "slug": "goi-tom-thit",
+      "category": "mon-goi",
+      "name": "Gỏi tôm thịt",
+      "price": 150000,
+      "sortOrder": 3
+    },
+    {
+      "slug": "mi-hai-san",
+      "category": "mon-mi",
+      "name": "Mì hải sản",
+      "price": 150000,
+      "sortOrder": 1
+    },
+    {
+      "slug": "mi-xao-bo",
+      "category": "mon-mi",
+      "name": "Mì xào bò",
+      "price": 150000,
+      "sortOrder": 2
+    },
+    {
+      "slug": "mi-xao-thap-cam",
+      "category": "mon-mi",
+      "name": "Mì xào thập cẩm",
+      "price": 150000,
+      "sortOrder": 3
+    },
+    {
+      "slug": "mi-xao-chay",
+      "category": "mon-mi",
+      "name": "Mì xào chay",
+      "price": 70000,
+      "sortOrder": 4
+    },
+    {
+      "slug": "com-chien-toi",
+      "category": "mon-com",
+      "name": "Cơm chiên tỏi",
+      "price": 69000,
+      "sortOrder": 1
+    },
+    {
+      "slug": "com-trum-men",
+      "category": "mon-com",
+      "name": "Cơm trùm mền",
+      "price": 89000,
+      "sortOrder": 2
+    },
+    {
+      "slug": "ga-chien-nuoc-mam",
+      "category": "mon-ga",
+      "name": "Gà chiên nước mắm",
+      "price": 150000,
+      "sortOrder": 1
+    },
+    {
+      "slug": "ga-kho-sa",
+      "category": "mon-ga",
+      "name": "Gà kho sả",
+      "price": 150000,
+      "priceMax": 200000,
+      "sortOrder": 2
+    },
+    {
+      "slug": "ga-chao-bop-goi",
+      "category": "mon-ga",
+      "name": "Gà cháo + bóp gỏi",
+      "price": 250000,
+      "priceMax": 300000,
+      "sortOrder": 3
+    },
+    {
+      "slug": "ga-hap-hanh",
+      "category": "mon-ga",
+      "name": "Gà hấp hành",
+      "price": 250000,
+      "priceMax": 300000,
+      "sortOrder": 4
+    },
+    {
+      "slug": "ga-no-muoi",
+      "category": "mon-ga",
+      "name": "Gà nổ muối",
+      "price": 250000,
+      "priceMax": 300000,
+      "isFeatured": true,
+      "sortOrder": 5
+    },
+    {
+      "slug": "lau-ga-chua-ngot",
+      "category": "mon-ga",
+      "name": "Lẩu gà chua ngọt",
+      "price": 200000,
+      "priceMax": 300000,
+      "sortOrder": 6
+    },
+    {
+      "slug": "ca-loc-chien",
+      "category": "mon-ca",
+      "name": "Cá lóc chiên",
+      "price": 150000,
+      "sortOrder": 1
+    },
+    {
+      "slug": "ca-dieu-hong-chien",
+      "category": "mon-ca",
+      "name": "Cá điêu hồng chiên",
+      "price": 150000,
+      "sortOrder": 2
+    },
+    {
+      "slug": "ca-tai-tuong-chien",
+      "category": "mon-ca",
+      "name": "Cá tai tượng chiên",
+      "description": "Giá tùy con",
+      "price": 200000,
+      "priceMax": 250000,
+      "sortOrder": 3
+    },
+    {
+      "slug": "ca-chim-nuong",
+      "category": "mon-ca",
+      "name": "Cá chim nướng",
+      "price": 0,
+      "isMarketPrice": true,
+      "sortOrder": 4
+    },
+    {
+      "slug": "ca-duoi-chien",
+      "category": "mon-ca",
+      "name": "Cá đuối chiên",
+      "price": 150000,
+      "sortOrder": 5
+    },
+    {
+      "slug": "ca-hoi-chien-mam",
+      "category": "mon-ca",
+      "name": "Cá hồi chiên mắm",
+      "price": 150000,
+      "isFeatured": true,
+      "sortOrder": 6
+    },
+    {
+      "slug": "ca-trao-chien-sa-ot",
+      "category": "mon-ca",
+      "name": "Cá trào chiên sả ớt",
+      "price": 120000,
+      "priceMax": 150000,
+      "isFeatured": true,
+      "sortOrder": 7
+    },
+    {
+      "slug": "tom-nuong-moi",
+      "category": "mon-tom",
+      "name": "Tôm nướng mọi",
+      "price": 150000,
+      "sortOrder": 1
+    },
+    {
+      "slug": "tom-nuong-muoi-ot",
+      "category": "mon-tom",
+      "name": "Tôm nướng muối ớt",
+      "price": 150000,
+      "sortOrder": 2
+    },
+    {
+      "slug": "tom-hap-nuoc-dua",
+      "category": "mon-tom",
+      "name": "Tôm hấp nước dừa",
+      "price": 150000,
+      "sortOrder": 3
+    },
+    {
+      "slug": "tom-hap-bia",
+      "category": "mon-tom",
+      "name": "Tôm hấp bia",
+      "price": 150000,
+      "sortOrder": 4
+    },
+    {
+      "slug": "bo-xao-cu-hanh",
+      "category": "mon-bo",
+      "name": "Bò xào củ hành",
+      "price": 150000,
+      "sortOrder": 1
+    },
+    {
+      "slug": "bo-xao-dau-rong",
+      "category": "mon-bo",
+      "name": "Bò xào đậu rồng",
+      "price": 150000,
+      "sortOrder": 2
+    },
+    {
+      "slug": "bo-bop-thau",
+      "category": "mon-bo",
+      "name": "Bò bóp thấu",
+      "price": 150000,
+      "sortOrder": 3
+    },
+    {
+      "slug": "bo-xao-kho-qua",
+      "category": "mon-bo",
+      "name": "Bò xào khổ qua",
+      "price": 150000,
+      "sortOrder": 4
+    },
+    {
+      "slug": "vu-heo-chien-mam",
+      "category": "mon-heo",
+      "name": "Vú heo chiên mắm",
+      "price": 150000,
+      "priceMax": 200000,
+      "sortOrder": 1
+    },
+    {
+      "slug": "doi-truong-xao-cai-chua",
+      "category": "mon-heo",
+      "name": "Dồi trường xào cải chua",
+      "price": 150000,
+      "sortOrder": 2
+    },
+    {
+      "slug": "chang-dung-luoc-nuoc-dua",
+      "category": "mon-heo",
+      "name": "Chẳng dừng luộc nước dừa",
+      "price": 150000,
+      "sortOrder": 3
+    },
+    {
+      "slug": "chang-dung-nuong",
+      "category": "mon-heo",
+      "name": "Chẳng dừng nướng",
+      "price": 150000,
+      "priceMax": 200000,
+      "sortOrder": 4
+    },
+    {
+      "slug": "ba-chi-chien-nuoc-mam",
+      "category": "mon-heo",
+      "name": "Ba chỉ chiên nước mắm",
+      "price": 120000,
+      "priceMax": 150000,
+      "sortOrder": 5
+    },
+    {
+      "slug": "ba-chi-chien-gion",
+      "category": "mon-heo",
+      "name": "Ba chỉ chiên giòn",
+      "price": 120000,
+      "priceMax": 150000,
+      "sortOrder": 6
+    },
+    {
+      "slug": "ech-chien-nuoc-mam",
+      "category": "mon-ech",
+      "name": "Ếch chiên nước mắm",
+      "price": 150000,
+      "sortOrder": 1
+    },
+    {
+      "slug": "ech-nup-lum",
+      "category": "mon-ech",
+      "name": "Ếch núp lùm",
+      "price": 150000,
+      "sortOrder": 2
+    },
+    {
+      "slug": "ech-xao-sa-ot",
+      "category": "mon-ech",
+      "name": "Ếch xào sả ớt",
+      "price": 150000,
+      "sortOrder": 3
+    },
+    {
+      "slug": "ech-xao-rau-ma",
+      "category": "mon-ech",
+      "name": "Ếch xào rau má",
+      "price": 150000,
+      "sortOrder": 4
+    },
+    {
+      "slug": "combo-nuong-tam-ca",
+      "category": "mon-nuong",
+      "name": "Combo Nướng Tam Ca",
+      "description": "Vú heo + Phèo bò + Bắp bò",
+      "price": 250000,
+      "priceMax": 300000,
+      "isFeatured": true,
+      "sortOrder": 1
+    },
+    {
+      "slug": "bo-lui-sa",
+      "category": "mon-nuong",
+      "name": "Bò lụi sả",
+      "price": 150000,
+      "priceMax": 200000,
+      "sortOrder": 2
+    },
+    {
+      "slug": "bap-bo-nuong",
+      "category": "mon-nuong",
+      "name": "Bắp bò nướng",
+      "price": 150000,
+      "priceMax": 200000,
+      "sortOrder": 3
+    },
+    {
+      "slug": "than-bo-nuong",
+      "category": "mon-nuong",
+      "name": "Thăn bò nướng",
+      "price": 150000,
+      "priceMax": 200000,
+      "sortOrder": 4
+    },
+    {
+      "slug": "pheo-bo-nuong",
+      "category": "mon-nuong",
+      "name": "Phèo bò nướng",
+      "price": 150000,
+      "priceMax": 200000,
+      "sortOrder": 5
+    },
+    {
+      "slug": "vu-heo-nuong",
+      "category": "mon-nuong",
+      "name": "Vú heo nướng",
+      "price": 150000,
+      "priceMax": 200000,
+      "sortOrder": 6
+    },
+    {
+      "slug": "tom-nuong",
+      "category": "mon-nuong",
+      "name": "Tôm nướng",
+      "price": 150000,
+      "priceMax": 200000,
+      "sortOrder": 7
+    },
+    {
+      "slug": "muc-nuong",
+      "category": "mon-nuong",
       "name": "Mực nướng",
-      "price": 129000,
+      "price": 150000,
+      "priceMax": 200000,
+      "sortOrder": 8
+    },
+    {
+      "slug": "chuot-chien-sa",
+      "category": "dong-que",
+      "name": "Chuột chiên sả",
+      "price": 150000,
+      "isFeatured": true,
+      "sortOrder": 1
+    },
+    {
+      "slug": "tep-chien-bot",
+      "category": "dong-que",
+      "name": "Tép chiên bột",
+      "price": 150000,
       "sortOrder": 2
     },
     {
-      "slug": "thai-hotpot",
-      "category": "hotpot",
+      "slug": "oc-buou-hap-sa",
+      "category": "dong-que",
+      "name": "Ốc bươu hấp sả",
+      "price": 150000,
+      "isFeatured": true,
+      "sortOrder": 3
+    },
+    {
+      "slug": "oc-buou-hap-tieu",
+      "category": "dong-que",
+      "name": "Ốc bươu hấp tiêu",
+      "price": 150000,
+      "sortOrder": 4
+    },
+    {
+      "slug": "chim-se-ro-ti",
+      "category": "dong-que",
+      "name": "Chim sẻ rô ti",
+      "price": 150000,
+      "sortOrder": 5
+    },
+    {
+      "slug": "ran-theo-mua",
+      "category": "dong-que",
+      "name": "Rắn (theo mùa)",
+      "description": "Xào sả hoặc hầm đu đủ",
+      "price": 0,
+      "isMarketPrice": true,
+      "sortOrder": 6
+    },
+    {
+      "slug": "vit-nau-chao",
+      "category": "mon-vit",
+      "name": "Vịt nấu chao",
+      "description": "Giá tùy theo con",
+      "price": 250000,
+      "priceMax": 300000,
+      "sortOrder": 1
+    },
+    {
+      "slug": "vit-nau-mang",
+      "category": "mon-vit",
+      "name": "Vịt nấu măng",
+      "description": "Giá tùy theo con",
+      "price": 250000,
+      "priceMax": 300000,
+      "sortOrder": 2
+    },
+    {
+      "slug": "vit-um-sa",
+      "category": "mon-vit",
+      "name": "Vịt um sả",
+      "description": "Giá theo phần",
+      "price": 0,
+      "isMarketPrice": true,
+      "sortOrder": 3
+    },
+    {
+      "slug": "lau-ca-hoi",
+      "category": "mon-lau",
+      "name": "Lẩu cá hồi",
+      "price": 200000,
+      "priceMax": 250000,
+      "isFeatured": true,
+      "sortOrder": 1
+    },
+    {
+      "slug": "lau-ga",
+      "category": "mon-lau",
+      "name": "Lẩu gà",
+      "price": 200000,
+      "priceMax": 300000,
+      "sortOrder": 2
+    },
+    {
+      "slug": "lau-thai",
+      "category": "mon-lau",
       "name": "Lẩu Thái",
-      "price": 249000,
+      "price": 200000,
+      "priceMax": 250000,
+      "sortOrder": 3
+    },
+    {
+      "slug": "lau-luon",
+      "category": "mon-lau",
+      "name": "Lẩu lươn",
+      "price": 0,
+      "isMarketPrice": true,
+      "sortOrder": 4
+    },
+    {
+      "slug": "ca-duoi-mot-nang",
+      "category": "kho-ca-lai-rai",
+      "name": "Cá đuối một nắng",
+      "description": "Best seller của quán",
+      "price": 150000,
+      "isFeatured": true,
       "sortOrder": 1
     },
     {
-      "slug": "iced-tea",
-      "category": "drinks",
-      "name": "Trà đá",
-      "price": 5000,
-      "sortOrder": 1
-    },
-    {
-      "slug": "beer-tiger",
-      "category": "drinks",
-      "name": "Bia Tiger",
-      "price": 20000,
-      "isAvailable": false,
+      "slug": "ca-chach-chien",
+      "category": "kho-ca-lai-rai",
+      "name": "Cá chạch chiên",
+      "price": 150000,
       "sortOrder": 2
+    },
+    {
+      "slug": "kho-ca-loc",
+      "category": "kho-ca-lai-rai",
+      "name": "Khô cá lóc",
+      "price": 150000,
+      "sortOrder": 3
+    },
+    {
+      "slug": "larue-bac-lon",
+      "category": "bia-giai-khat",
+      "name": "Larue Bạc lon",
+      "price": 18000,
+      "sortOrder": 1
+    },
+    {
+      "slug": "tiger-bac-lun",
+      "category": "bia-giai-khat",
+      "name": "Tiger Bạc lùn",
+      "price": 18000,
+      "sortOrder": 2
+    },
+    {
+      "slug": "tiger-bac-cao",
+      "category": "bia-giai-khat",
+      "name": "Tiger Bạc cao",
+      "price": 21000,
+      "sortOrder": 3
+    },
+    {
+      "slug": "heineken-lun",
+      "category": "bia-giai-khat",
+      "name": "Heineken lùn",
+      "price": 20000,
+      "sortOrder": 4
+    },
+    {
+      "slug": "heineken-cao",
+      "category": "bia-giai-khat",
+      "name": "Heineken cao",
+      "price": 24000,
+      "sortOrder": 5
+    },
+    {
+      "slug": "nuoc-ngot",
+      "category": "bia-giai-khat",
+      "name": "Nước ngọt",
+      "price": 15000,
+      "sortOrder": 6
+    },
+    {
+      "slug": "nuoc-suoi",
+      "category": "bia-giai-khat",
+      "name": "Nước suối",
+      "price": 10000,
+      "sortOrder": 7
+    },
+    {
+      "slug": "khan-lanh",
+      "category": "bia-giai-khat",
+      "name": "Khăn lạnh",
+      "price": 3000,
+      "sortOrder": 8
     }
   ]
 }

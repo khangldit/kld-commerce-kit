@@ -11,6 +11,11 @@ async function bootstrap() {
   app.useLogger(app.get(Logger));
   const config = app.get<ConfigService<Env, true>>(ConfigService);
 
+  app.enableCors({
+    origin: config.get('CORS_ORIGINS', { infer: true }),
+    methods: ['GET', 'POST'],
+  });
+
   if (config.get('ENABLE_SWAGGER', { infer: true })) {
     const document = SwaggerModule.createDocument(
       app,

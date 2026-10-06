@@ -9,12 +9,35 @@ export const seedFileSchema = z
       name: z.string().min(1),
       contact: z.object({
         phone: z.string().min(1),
+        secondaryPhone: z.string().optional(),
         address: z.string().optional(),
         mapUrl: z.url().optional(),
         mapQrImage: z.string().optional(),
+        geo: z
+          .object({
+            lat: z.number().min(-90).max(90),
+            lng: z.number().min(-180).max(180),
+          })
+          .optional(),
+        openingHours: z.string().optional(),
+        zalo: z.url().optional(),
+        facebook: z.url().optional(),
       }),
-      branding: z.object({ logo: z.string().optional() }).default({}),
-      payment: z.object({ qrImage: z.string().optional() }).default({}),
+      branding: z
+        .object({
+          logo: z.string().optional(),
+          tagline: z.string().optional(),
+          coverImage: z.string().optional(),
+        })
+        .default({}),
+      payment: z
+        .object({
+          qrImage: z.string().optional(),
+          bankName: z.string().optional(),
+          accountNumber: z.string().optional(),
+          accountName: z.string().optional(),
+        })
+        .default({}),
       notifications: z
         .object({
           telegramChatId: z
@@ -39,9 +62,12 @@ export const seedFileSchema = z
         category: slugSchema,
         name: z.string().min(1),
         price: z.number().int().nonnegative(),
+        priceMax: z.number().int().positive().optional(),
+        isMarketPrice: z.boolean().default(false),
         image: z.string().optional(),
         description: z.string().optional(),
         isAvailable: z.boolean().default(true),
+        isFeatured: z.boolean().default(false),
         sortOrder: z.number().int().default(0),
       }),
     ),
@@ -66,6 +92,13 @@ export const seedFileSchema = z
         });
       }
       seenProductSlugs.add(product.slug);
+      if (product.priceMax !== undefined && product.priceMax <= product.price) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['products', i, 'priceMax'],
+          message: 'priceMax must be greater than price',
+        });
+      }
     });
   });
 

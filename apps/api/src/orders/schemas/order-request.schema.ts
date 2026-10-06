@@ -13,6 +13,12 @@ export class OrderItem {
   @Prop({ type: Number, required: true, min: 0 })
   price!: number;
 
+  @Prop({ type: Number, min: 0 })
+  priceMax?: number;
+
+  @Prop({ type: Boolean })
+  isMarketPrice?: boolean;
+
   @Prop({ type: Number, required: true, min: 1 })
   qty!: number;
 }
@@ -30,8 +36,9 @@ export class OrderRequest {
   @Prop({ type: String, required: true })
   code!: string;
 
-  @Prop({ type: String, required: true })
-  phone!: string;
+  /** Absent for dine-in orders placed at the table. */
+  @Prop({ type: String })
+  phone?: string;
 
   @Prop({ type: String })
   name?: string;
@@ -39,8 +46,16 @@ export class OrderRequest {
   @Prop({ type: String, required: true, enum: fulfillmentSchema.options })
   fulfillment!: Fulfillment;
 
+  /** Reservation time (dine-in) or delivery time. Absent = now / ASAP. */
+  @Prop({ type: Date })
+  scheduledAt?: Date;
+
+  @Prop({ type: Number, min: 1 })
+  partySize?: number;
+
+  /** Delivery address — only for `delivery`. */
   @Prop({ type: String })
-  table?: string;
+  address?: string;
 
   @Prop({ type: String })
   note?: string;

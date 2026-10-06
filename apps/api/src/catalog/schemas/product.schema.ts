@@ -26,7 +26,13 @@ export class Product {
       message: 'price must be an integer (VND)',
     },
   })
-  price!: number;
+  price!: number; // lowest price when there is a range; 0 for market price
+
+  @Prop({ type: Number, min: 0 })
+  priceMax?: number;
+
+  @Prop({ type: Boolean, default: false })
+  isMarketPrice!: boolean;
 
   @Prop({ type: String })
   image?: string;
@@ -36,6 +42,9 @@ export class Product {
 
   @Prop({ type: Boolean, default: true })
   isAvailable!: boolean;
+
+  @Prop({ type: Boolean, default: false })
+  isFeatured!: boolean;
 
   @Prop({ type: Number, default: 0 })
   sortOrder!: number;

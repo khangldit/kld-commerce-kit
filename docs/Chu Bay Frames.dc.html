@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Bitter:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+--c-bg:#F5EEE2;--c-bg-sunk:#ECE2D2;--c-surface:#FFFCF6;--c-ink:#2A1E15;--c-ink-2:#6B5848;--c-ink-3:#A39183;--c-line:#E3D5BF;--c-line-soft:#EFE6D7;
+--c-primary:#1E5B3E;--c-primary-hover:#17492F;--c-primary-soft:#E1EBDF;--c-on-primary:#FFFCF6;
+--c-accent:#C4471D;--c-accent-soft:#F8E1D3;--c-on-accent:#FFFCF6;--c-price:#A33A15;
+--c-danger:#B42318;--c-danger-soft:#FCE8E4;--c-warn-soft:#FBF0D3;
+--c-hero-bg:#1E4D36;--c-on-hero:#FFF8EC;--c-footer:#2A1E15;--c-on-footer:#F1E6D4;--c-footer-2:#B8A693;
+--c-tint-1:#F2DCC8;--c-tint-2:#F3E4BC;--c-tint-3:#D8E6E1;--c-tint-4:#E7E1C9;
+--r-sm:8px;--r-md:12px;--r-lg:16px;--r-xl:22px;--r-pill:999px;
+--sh-card:0 1px 0 rgba(42,30,21,.05);--sh-panel:0 8px 28px -12px rgba(42,30,21,.22);--sh-float:0 14px 30px -10px rgba(20,45,30,.55);--sh-modal:0 28px 70px -16px rgba(0,0,0,.45);
+--f-head:'Bitter',Georgia,serif;--f-body:'Be Vietnam Pro',system-ui,sans-serif;--f-mono:ui-monospace,Menlo,monospace;
+}
+body{margin:0;background:#E9E4DA;font-family:'Be Vietnam Pro',system-ui,sans-serif;color:#2A1E15}
+*{box-sizing:border-box}
+a{color:#1E5B3E}a:hover{color:#C4471D}
+.dv-turn{padding:40px 44px 36px;border-bottom:1px solid rgba(0,0,0,.08);scroll-margin-top:16px}
+.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 20px}
+.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:4px;text-decoration:none}
+.dv-tname{font:600 15px/1.2 'Be Vietnam Pro',system-ui,sans-serif;color:#1a1a1a}
+.dv-opts{display:flex;flex-wrap:wrap;gap:36px;align-items:flex-start}
+.dv-opt{flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px}
+.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#1a1a1a;border-radius:5px;text-decoration:none}
+.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 12px/1.3 system-ui,sans-serif;color:rgba(0,0,0,.6)}
+.dv-card{max-width:100%;background:#fff;border:1px solid rgba(0,0,0,.1);border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.08);overflow:hidden}
+.dv-opt:target .dv-oid{background:#2a78d6;color:#fff}
+.dv-next{margin:22px 0 0;font:12px/1.5 system-ui,sans-serif;color:rgba(0,0,0,.55)}
+</style>
+</helmet>
+
+<section class="dv-turn" id="t0" style="padding-bottom:28px">
+<div style="max-width:980px">
+<div style="font:600 11px var(--f-mono);letter-spacing:.12em;color:#8a7a6a;text-transform:uppercase">Template · Next.js + Tailwind</div>
+<h1 style="margin:6px 0 10px;font-family:var(--f-head);font-size:40px;font-weight:800">Quán Ăn Chú Bảy — menu &amp; đặt món</h1>
+<p style="margin:0;font-size:15px;line-height:1.6;color:#5a4a3c;text-wrap:pretty">Miền Tây rustic, kept quiet: cream “giấy dó” ground, banana-leaf green for actions &amp; selection, chili-terracotta reserved for the one primary CTA per screen (Đặt món / Gửi đơn) and prices. Bitter (slab) for headings, Be Vietnam Pro for UI — both full Vietnamese coverage. Woven-mat texture in the hero works with or without a cover photo. Every frame below is the same live component at a fixed width — tap Thêm, steppers, tabs, search, Gửi đơn. All styling reads from <code>:root</code> tokens (see <a href="#9a">9a</a>).</p>
+</div>
+</section>
+
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">Home — “Món nổi bật” (default tab)</span></div>
+<div class="dv-opts">
+<div class="dv-opt" id="1a"><div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>390 · 1 column, bottom bar</div><div class="dv-card" style="width:390px;height:844px"><dc-import name="ChuBayApp" frame-width="390" frame-height="844" page="home" tab="featured" preset="some" style="width:390px;height:844px" hint-size="390px,844px"></dc-import></div></div>
+<div class="dv-opt" id="1b"><div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>1440 · 3 columns + sticky “Món đã chọn” panel</div><div class="dv-card" style="width:1440px;height:960px"><dc-import name="ChuBayApp" frame-width="1440" frame-height="960" page="home" tab="featured" preset="some" style="width:1440px;height:960px" hint-size="1440px,960px"></dc-import></div></div>
+</div>
+</section>
+
+<section class="dv-turn" id="t2">
+<div class="dv-thd"><a class="dv-tid" href="#t2">2</a><span class="dv-tname">Home — “Tất cả” with section titles</span></div>
+<div class="dv-opts">
+<div class="dv-opt" id="2a"><div class="dv-olabel"><a class="dv-oid" href="#2a">2a</a>390 · scroll inside frame to see all sections</div><div class="dv-card" style="width:390px;height:844px"><dc-import name="ChuBayApp" frame-width="390" frame-height="844" page="home" tab="all" preset="some" style="width:390px;height:844px" hint-size="390px,844px"></dc-import></div></div>
+<div class="dv-opt" id="2b"><div class="dv-olabel"><a class="dv-oid" href="#2b">2b</a>1440 · cover image variant (optional)</div><div class="dv-card" style="width:1440px;height:960px"><dc-import name="ChuBayApp" frame-width="1440" frame-height="960" page="home" tab="all" preset="some" has-cover="{{ yes }}" style="width:1440px;height:960px" hint-size="1440px,960px"></dc-import></div></div>
+</div>
+</section>
+
+<section class="dv-turn" id="t3">
+<div class="dv-thd"><a class="dv-tid" href="#t3">3</a><span class="dv-tname">Mobile bottom sheet open</span></div>
+<div class="dv-opts">
+<div class="dv-opt" id="3a"><div class="dv-olabel"><a class="dv-oid" href="#3a">3a</a>390 · tap bottom bar → sheet</div><div class="dv-card" style="width:390px;height:844px"><dc-import name="ChuBayApp" frame-width="390" frame-height="844" page="home" tab="featured" preset="full" sheet-open="{{ yes }}" style="width:390px;height:844px" hint-size="390px,844px"></dc-import></div></div>
+<div class="dv-opt" id="3b"><div class="dv-olabel"><a class="dv-oid" href="#3b">3b</a>768 · tablet uses the same bar + sheet (centred, max 640)</div><div class="dv-card" style="width:768px;height:844px"><dc-import name="ChuBayApp" frame-width="768" frame-height="844" page="home" tab="featured" preset="full" sheet-open="{{ yes }}" style="width:768px;height:844px" hint-size="768px,844px"></dc-import></div></div>
+</div>
+<p class="dv-next">Desktop has no sheet — the right panel in <a class="dv-oid" href="#1b">1b</a> shows the same list.</p>
+</section>
+
+<section class="dv-turn" id="t4">
+<div class="dv-thd"><a class="dv-tid" href="#t4">4</a><span class="dv-tname">Order — normal, “Ăn tại quán · Đặt trước”</span></div>
+<div class="dv-opts">
+<div class="dv-opt" id="4a"><div class="dv-olabel"><a class="dv-oid" href="#4a">4a</a>390 · date, 30-min slots, số người</div><div class="dv-card" style="width:390px;height:1760px"><dc-import name="ChuBayApp" frame-width="390" frame-height="1760" page="order" preset="some" dine-when="later" style="width:390px;height:1760px" hint-size="390px,1760px"></dc-import></div></div>
+<div class="dv-opt" id="4b"><div class="dv-olabel"><a class="dv-oid" href="#4b">4b</a>1440 · form left, summary + Gửi đơn right</div><div class="dv-card" style="width:1440px;height:1120px"><dc-import name="ChuBayApp" frame-width="1440" frame-height="1120" page="order" preset="some" dine-when="later" style="width:1440px;height:1120px" hint-size="1440px,1120px"></dc-import></div></div>
+</div>
+</section>
+
+<section class="dv-turn" id="t5">
+<div class="dv-thd"><a class="dv-tid" href="#t5">5</a><span class="dv-tname">Order — table mode (scanned “Bàn 02 · Sảnh 01” QR)</span></div>
+<div class="dv-opts">
+<div class="dv-opt" id="5a"><div class="dv-olabel"><a class="dv-oid" href="#5a">5a</a>390 · locked to dine-in now, note prefix</div><div class="dv-card" style="width:390px;height:1320px"><dc-import name="ChuBayApp" frame-width="390" frame-height="1320" page="order" preset="full" table-mode="{{ yes }}" style="width:390px;height:1320px" hint-size="390px,1320px"></dc-import></div></div>
+<div class="dv-opt" id="5b"><div class="dv-olabel"><a class="dv-oid" href="#5b">5b</a>1440</div><div class="dv-card" style="width:1440px;height:1000px"><dc-import name="ChuBayApp" frame-width="1440" frame-height="1000" page="order" preset="full" table-mode="{{ yes }}" style="width:1440px;height:1000px" hint-size="1440px,1000px"></dc-import></div></div>
+</div>
+</section>
+
+<section class="dv-turn" id="t6">
+<div class="dv-thd"><a class="dv-tid" href="#t6">6</a><span class="dv-tname">Order — error &amp; empty states</span></div>
+<div class="dv-opts">
+<div class="dv-opt" id="6a"><div class="dv-olabel"><a class="dv-oid" href="#6a">6a</a>390 · món đã hết + inline phone error + network “Thử lại”</div><div class="dv-card" style="width:390px;height:1480px"><dc-import name="ChuBayApp" frame-width="390" frame-height="1480" page="order" preset="err" demo-errors="{{ yes }}" style="width:390px;height:1480px" hint-size="390px,1480px"></dc-import></div></div>
+<div class="dv-opt" id="6b"><div class="dv-olabel"><a class="dv-oid" href="#6b">6b</a>1440 · same states</div><div class="dv-card" style="width:1440px;height:1040px"><dc-import name="ChuBayApp" frame-width="1440" frame-height="1040" page="order" preset="err" demo-errors="{{ yes }}" style="width:1440px;height:1040px" hint-size="1440px,1040px"></dc-import></div></div>
+<div class="dv-opt" id="6c"><div class="dv-olabel"><a class="dv-oid" href="#6c">6c</a>390 · empty cart</div><div class="dv-card" style="width:390px;height:700px"><dc-import name="ChuBayApp" frame-width="390" frame-height="700" page="order" preset="empty" style="width:390px;height:700px" hint-size="390px,700px"></dc-import></div></div>
+</div>
+<p class="dv-next">Loading state: tap “Gửi đơn” in <a class="dv-oid" href="#4a">4a</a> — spinner + “Đang gửi đơn...”, then success. In <a class="dv-oid" href="#6a">6a</a>, fix the phone + bỏ món, first send fails, “Thử lại” succeeds.</p>
+</section>
+
+<section class="dv-turn" id="t7">
+<div class="dv-thd"><a class="dv-tid" href="#t7">7</a><span class="dv-tname">Success view (same page)</span></div>
+<div class="dv-opts">
+<div class="dv-opt" id="7a"><div class="dv-olabel"><a class="dv-oid" href="#7a">7a</a>390</div><div class="dv-card" style="width:390px;height:960px"><dc-import name="ChuBayApp" frame-width="390" frame-height="960" page="success" preset="full" dine-when="later" style="width:390px;height:960px" hint-size="390px,960px"></dc-import></div></div>
+<div class="dv-opt" id="7b"><div class="dv-olabel"><a class="dv-oid" href="#7b">7b</a>1440</div><div class="dv-card" style="width:1440px;height:960px"><dc-import name="ChuBayApp" frame-width="1440" frame-height="960" page="success" preset="full" dine-when="later" style="width:1440px;height:960px" hint-size="1440px,960px"></dc-import></div></div>
+</div>
+</section>
+
+<section class="dv-turn" id="t8">
+<div class="dv-thd"><a class="dv-tid" href="#t8">8</a><span class="dv-tname">Payment info popup (from footer — not part of ordering)</span></div>
+<div class="dv-opts">
+<div class="dv-opt" id="8a"><div class="dv-olabel"><a class="dv-oid" href="#8a">8a</a>390</div><div class="dv-card" style="width:390px;height:844px"><dc-import name="ChuBayApp" frame-width="390" frame-height="844" page="home" preset="empty" pay-open="{{ yes }}" style="width:390px;height:844px" hint-size="390px,844px"></dc-import></div></div>
+<div class="dv-opt" id="8b"><div class="dv-olabel"><a class="dv-oid" href="#8b">8b</a>1440</div><div class="dv-card" style="width:1440px;height:960px"><dc-import name="ChuBayApp" frame-width="1440" frame-height="960" page="home" preset="some" pay-open="{{ yes }}" style="width:1440px;height:960px" hint-size="1440px,960px"></dc-import></div></div>
+</div>
+</section>
+
+<section class="dv-turn" id="t9">
+<div class="dv-thd"><a class="dv-tid" href="#t9">9</a><span class="dv-tname">Component sheet</span></div>
+<div class="dv-opts">
+<div class="dv-opt" id="9a"><div class="dv-olabel"><a class="dv-oid" href="#9a">9a</a>Tokens + components · reskin = edit tokens only</div>
+<div class="dv-card" style="width:1200px;background:var(--c-bg);font-family:var(--f-body);color:var(--c-ink);padding:36px;display:flex;flex-direction:column;gap:36px">
+
+<div>
+<h2 style="margin:0 0 14px;font-family:var(--f-head);font-size:24px">Màu (color tokens)</h2>
+<div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px">
+<sc-for list="{{ colors }}" as="c" hint-placeholder-count="18">
+<div style="background:var(--c-surface);border:1px solid var(--c-line);border-radius:var(--r-md);overflow:hidden">
+<div style="height:56px;background:{{ c.v }};border-bottom:1px solid var(--c-line-soft)"></div>
+<div style="padding:8px 10px"><div style="font:600 11.5px var(--f-mono)">{{ c.k }}</div><div style="font-size:12px;color:var(--c-ink-2)">{{ c.use }}</div></div>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div style="display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:28px">
+<div>
+<h2 style="margin:0 0 14px;font-family:var(--f-head);font-size:24px">Chữ (type)</h2>
+<div style="display:flex;flex-direction:column;gap:10px;background:var(--c-surface);border:1px solid var(--c-line);border-radius:var(--r-lg);padding:18px">
+<div style="font-family:var(--f-head);font-weight:800;font-size:40px;line-height:1.05">Quán Ăn Chú Bảy</div><div style="font:11px var(--f-mono);color:var(--c-ink-2)">--f-head · Bitter 800 · 32/46</div>
+<div style="font-family:var(--f-head);font-weight:700;font-size:22px">Đồ nướng · Lẩu mắm</div><div style="font:11px var(--f-mono);color:var(--c-ink-2)">--f-head · Bitter 700 · 20–22</div>
+<div style="font-size:16px;font-weight:600">Ba chỉ nướng mật ong</div><div style="font-size:13px;color:var(--c-ink-2)">Ba chỉ heo ướp mật ong, nướng than hoa — ữ ặ ố ỡ đ</div><div style="font:11px var(--f-mono);color:var(--c-ink-2)">--f-body · Be Vietnam Pro 400–700 · 13–16</div>
+</div>
+</div>
+<div>
+<h2 style="margin:0 0 14px;font-family:var(--f-head);font-size:24px">Bo góc (radius)</h2>
+<div style="display:flex;flex-wrap:wrap;gap:12px">
+<sc-for list="{{ radii }}" as="r" hint-placeholder-count="5"><div style="display:flex;flex-direction:column;align-items:center;gap:6px"><div style="width:64px;height:64px;background:var(--c-primary-soft);border:1.5px solid var(--c-primary);border-radius:{{ r.v }}"></div><span style="font:11px var(--f-mono)">{{ r.k }}</span></div></sc-for>
+</div>
+</div>
+<div>
+<h2 style="margin:0 0 14px;font-family:var(--f-head);font-size:24px">Đổ bóng (shadow)</h2>
+<div style="display:flex;flex-wrap:wrap;gap:14px">
+<sc-for list="{{ shadows }}" as="s" hint-placeholder-count="4"><div style="display:flex;flex-direction:column;align-items:center;gap:8px"><div style="width:72px;height:56px;background:var(--c-surface);border-radius:var(--r-md);box-shadow:{{ s.v }}"></div><span style="font:11px var(--f-mono)">{{ s.k }}</span></div></sc-for>
+</div>
+</div>
+</div>
+
+<div>
+<h2 style="margin:0 0 14px;font-family:var(--f-head);font-size:24px">Thẻ món (product card)</h2>
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:760px">
+<sc-for list="{{ cards }}" as="it" hint-placeholder-count="4">
+<div style="display:flex;flex-direction:column;gap:6px">
+<span style="font:11px var(--f-mono);color:var(--c-ink-2)">{{ it.label }}</span>
+<article style="display:flex;gap:12px;padding:10px;background:var(--c-surface);border:1px solid {{ it.border }};border-radius:var(--r-lg);min-height:126px">
+<div style="flex:none;width:104px;height:104px;border-radius:var(--r-md);overflow:hidden;position:relative;background:{{ it.tint }}">
+<sc-if value="{{ it.photo }}"><div style="position:absolute;inset:0;background:repeating-linear-gradient(135deg,rgba(42,30,21,.13) 0 6px,rgba(42,30,21,.05) 6px 12px)"></div><div style="position:absolute;left:6px;bottom:6px;font:9px var(--f-mono);color:rgba(42,30,21,.6);background:rgba(255,252,246,.75);padding:2px 4px;border-radius:3px">ẢNH MÓN</div></sc-if>
+<sc-if value="{{ it.nophoto }}"><div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px"><div style="width:48px;height:48px;border-radius:50%;border:2px solid rgba(42,30,21,.16);display:grid;place-items:center;font-family:var(--f-head);font-weight:800;font-size:24px;color:rgba(42,30,21,.24)">7</div><div style="font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(42,30,21,.45)">{{ it.cat }}</div></div></sc-if>
+</div>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column">
+<div style="font-size:16px;font-weight:600;line-height:1.3">{{ it.name }}</div>
+<div style="margin-top:3px;font-size:13px;color:var(--c-ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ it.desc }}</div>
+<div style="margin-top:auto;padding-top:8px;display:flex;align-items:center;justify-content:space-between;gap:8px">
+<span style="font-weight:700;font-size:16px;color:var(--c-price)">{{ it.price }}</span>
+<sc-if value="{{ it.notAdded }}"><span style="height:44px;padding:0 20px;border-radius:var(--r-pill);border:1.5px solid var(--c-primary);color:var(--c-primary);font-weight:700;display:flex;align-items:center">Thêm</span></sc-if>
+<sc-if value="{{ it.added }}"><span style="display:flex;align-items:center;height:44px;border-radius:var(--r-pill);background:var(--c-primary);color:var(--c-on-primary);font-weight:700"><span style="width:44px;text-align:center;font-size:20px">–</span><span style="min-width:20px;text-align:center">2</span><span style="width:44px;text-align:center;font-size:20px">+</span></span></sc-if>
+</div>
+</div>
+</article>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:28px">
+<div style="display:flex;flex-direction:column;gap:22px">
+<div>
+<h2 style="margin:0 0 12px;font-family:var(--f-head);font-size:24px">Tab danh mục</h2>
+<div style="display:flex;flex-wrap:wrap;gap:8px">
+<span style="height:44px;padding:0 18px;border-radius:var(--r-pill);background:var(--c-primary);color:var(--c-on-primary);border:1.5px solid var(--c-primary);font-weight:600;display:flex;align-items:center">⭐ Món nổi bật</span>
+<span style="height:44px;padding:0 18px;border-radius:var(--r-pill);background:var(--c-surface);border:1.5px solid var(--c-line);font-weight:600;display:flex;align-items:center">Tất cả</span>
+<span style="height:44px;padding:0 18px;border-radius:var(--r-pill);background:var(--c-surface);border:1.5px solid var(--c-line);font-weight:600;display:flex;align-items:center">Đồ nướng</span>
+<span style="height:44px;padding:0 18px;border-radius:var(--r-pill);background:var(--c-surface);border:1.5px solid var(--c-line);font-weight:600;display:flex;align-items:center">Lẩu</span>
+</div>
+</div>
+<div>
+<h2 style="margin:0 0 12px;font-family:var(--f-head);font-size:24px">Stepper</h2>
+<div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center">
+<span style="display:flex;align-items:center;height:44px;border-radius:var(--r-pill);background:var(--c-primary);color:var(--c-on-primary);font-weight:700"><span style="width:44px;text-align:center;font-size:20px">–</span><span style="min-width:20px;text-align:center">2</span><span style="width:44px;text-align:center;font-size:20px">+</span></span>
+<span style="display:flex;align-items:center;height:44px;border-radius:var(--r-pill);background:var(--c-primary-soft);color:var(--c-primary);font-weight:700"><span style="width:44px;text-align:center;font-size:20px">–</span><span style="min-width:20px;text-align:center">2</span><span style="width:44px;text-align:center;font-size:20px">+</span></span>
+<span style="display:flex;align-items:center;height:44px;border-radius:var(--r-pill);border:1.5px solid var(--c-line);background:var(--c-surface);font-weight:700"><span style="width:44px;text-align:center;font-size:20px">–</span><span style="min-width:28px;text-align:center">4</span><span style="width:44px;text-align:center;font-size:20px">+</span></span>
+<span style="font-size:12px;color:var(--c-ink-2)">card · list row · số người — all 44px targets</span>
+</div>
+</div>
+<div>
+<h2 style="margin:0 0 12px;font-family:var(--f-head);font-size:24px">Nút (buttons)</h2>
+<div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+<span style="height:52px;padding:0 26px;border-radius:var(--r-pill);background:var(--c-accent);color:var(--c-on-accent);font-weight:700;display:flex;align-items:center">Đặt món</span>
+<span style="height:52px;padding:0 22px;border-radius:var(--r-pill);background:var(--c-accent);color:var(--c-on-accent);font-weight:700;display:flex;align-items:center;gap:10px;opacity:.8"><span style="width:18px;height:18px;border-radius:50%;border:2.5px solid rgba(255,252,246,.35);border-top-color:#FFFCF6"></span>Đang gửi đơn...</span>
+<span style="height:52px;padding:0 24px;border-radius:var(--r-pill);background:var(--c-primary);color:var(--c-on-primary);font-weight:700;display:flex;align-items:center">Về menu</span>
+<span style="height:44px;padding:0 20px;border-radius:var(--r-pill);border:1.5px solid var(--c-primary);color:var(--c-primary);font-weight:700;display:flex;align-items:center">Thêm</span>
+<span style="height:44px;padding:0 16px;border-radius:var(--r-pill);border:1.5px solid var(--c-danger);color:var(--c-danger);font-weight:700;display:flex;align-items:center">Bỏ món này</span>
+<span style="font-size:13px;color:var(--c-ink-2);text-decoration:underline">Không phải đang ở quán?</span>
+</div>
+</div>
+<div>
+<h2 style="margin:0 0 12px;font-family:var(--f-head);font-size:24px">Chip &amp; segmented</h2>
+<div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px">
+<span style="height:36px;padding:0 14px;border-radius:var(--r-pill);background:var(--c-primary);color:var(--c-on-primary);font-weight:700;font-size:14px;display:flex;align-items:center">📍 Bàn 02 · Sảnh 01</span>
+<span style="height:28px;padding:0 10px;border-radius:var(--r-pill);background:var(--c-danger);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center">Món đã hết</span>
+<span style="font-size:13px;font-weight:700;color:var(--c-primary);background:var(--c-primary-soft);padding:2px 8px;border-radius:6px">[Bàn 02 Sảnh 01]</span>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:var(--r-md);background:var(--c-bg-sunk);max-width:360px"><span style="height:44px;border-radius:9px;background:var(--c-surface);box-shadow:0 1px 3px rgba(42,30,21,.15);font-weight:700;display:grid;place-items:center">Ăn tại quán</span><span style="height:44px;border-radius:9px;color:var(--c-ink-2);font-weight:700;display:grid;place-items:center">Mang về</span></div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:22px">
+<div>
+<h2 style="margin:0 0 12px;font-family:var(--f-head);font-size:24px">Ô nhập (inputs)</h2>
+<div style="display:flex;flex-direction:column;gap:14px;max-width:420px">
+<div><div style="font-weight:600;font-size:14px;margin-bottom:6px">Số điện thoại <span style="color:var(--c-accent)">*</span></div><div style="height:48px;padding:0 14px;border-radius:var(--r-md);border:1.5px solid var(--c-line);background:var(--c-surface);display:flex;align-items:center;font-size:16px">0909 123 456</div></div>
+<div><div style="font-weight:600;font-size:14px;margin-bottom:6px">Số điện thoại <span style="color:var(--c-accent)">*</span></div><div style="height:48px;padding:0 14px;border-radius:var(--r-md);border:1.5px solid var(--c-danger);background:var(--c-danger-soft);display:flex;align-items:center;font-size:16px;color:var(--c-ink-3)">09xx xxx xxx</div><div style="color:var(--c-danger);font-size:13px;margin-top:6px;font-weight:500">⚠ Vui lòng nhập số điện thoại để quán gọi lại.</div></div>
+<div><div style="font-weight:600;font-size:14px;margin-bottom:6px">Ghi chú <span style="font-weight:400;color:var(--c-ink-2)">(không bắt buộc)</span></div><div style="border:1.5px solid var(--c-line);border-radius:var(--r-md);background:var(--c-surface);padding:10px 14px;min-height:96px"><span style="display:inline-block;font-size:13px;font-weight:700;color:var(--c-primary);background:var(--c-primary-soft);padding:2px 8px;border-radius:6px;margin-bottom:6px">[Bàn 02 Sảnh 01]</span><div style="font-size:16px">Cho thêm chén đá, ít cay</div></div><div style="display:flex;justify-content:space-between;margin-top:6px;font-size:12.5px;color:var(--c-ink-2)"><span>Số bàn được gửi kèm tự động</span><span>41/200</span></div></div>
+</div>
+</div>
+<div>
+<h2 style="margin:0 0 12px;font-family:var(--f-head);font-size:24px">Thanh giỏ (bottom bar)</h2>
+<div style="height:60px;max-width:366px;border-radius:var(--r-pill);background:var(--c-primary);color:var(--c-on-primary);display:flex;align-items:center;gap:8px;padding:0 8px 0 20px;box-shadow:var(--sh-float)"><span style="font-weight:600">3 món</span><span style="opacity:.5">·</span><span style="font-weight:700">245.000 ₫</span><span style="margin-left:auto;height:44px;padding:0 18px;border-radius:var(--r-pill);background:var(--c-accent);color:var(--c-on-accent);display:flex;align-items:center;font-weight:700">Đặt món</span></div>
+</div>
+</div>
+</div>
+
+<div>
+<h2 style="margin:0 0 12px;font-family:var(--f-head);font-size:24px">Tailwind mapping</h2>
+<pre style="margin:0;padding:18px 20px;border-radius:var(--r-lg);background:var(--c-footer);color:var(--c-on-footer);font:12.5px/1.6 var(--f-mono);overflow:auto">// tailwind.config.ts — brand lives only in globals.css :root
+theme: { extend: {
+  colors: { bg: 'var(--c-bg)', surface: 'var(--c-surface)', ink: { DEFAULT: 'var(--c-ink)', 2: 'var(--c-ink-2)', 3: 'var(--c-ink-3)' },
+            line: 'var(--c-line)', primary: { DEFAULT: 'var(--c-primary)', soft: 'var(--c-primary-soft)', on: 'var(--c-on-primary)' },
+            accent: { DEFAULT: 'var(--c-accent)', on: 'var(--c-on-accent)' }, price: 'var(--c-price)', danger: { DEFAULT: 'var(--c-danger)', soft: 'var(--c-danger-soft)' } },
+  borderRadius: { sm: 'var(--r-sm)', md: 'var(--r-md)', lg: 'var(--r-lg)', xl: 'var(--r-xl)', pill: 'var(--r-pill)' },
+  boxShadow: { card: 'var(--sh-card)', panel: 'var(--sh-panel)', float: 'var(--sh-float)', modal: 'var(--sh-modal)' },
+  fontFamily: { head: 'var(--f-head)', body: 'var(--f-body)' },
+  screens: { sm: '640px', lg: '1024px', xxl: '1440px' }   // 1 → 2 → 2+panel → 3+panel
+}}</pre>
+</div>
+
+</div>
+</div>
+</div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const C = (k, use) => ({ k, use, v: `var(${k})` });
+    return {
+      yes: true,
+      colors: [
+        C('--c-bg', 'Nền trang'), C('--c-surface', 'Thẻ, panel'), C('--c-bg-sunk', 'Nền segmented'), C('--c-line', 'Viền'),
+        C('--c-ink', 'Chữ chính'), C('--c-ink-2', 'Chữ phụ'), C('--c-primary', 'Chọn, tab, stepper'), C('--c-primary-soft', 'Nền chọn nhẹ'),
+        C('--c-accent', 'CTA chính'), C('--c-price', 'Giá'), C('--c-danger', 'Lỗi'), C('--c-danger-soft', 'Nền lỗi'),
+        C('--c-hero-bg', 'Hero'), C('--c-footer', 'Footer'), C('--c-tint-1', 'Placeholder · nướng'), C('--c-tint-2', 'Placeholder · lẩu'),
+        C('--c-tint-3', 'Placeholder · hải sản'), C('--c-tint-4', 'Placeholder · đồ uống')
+      ],
+      radii: ['--r-sm', '--r-md', '--r-lg', '--r-xl', '--r-pill'].map(k => ({ k, v: `var(${k})` })),
+      shadows: ['--sh-card', '--sh-panel', '--sh-float', '--sh-modal'].map(k => ({ k, v: `var(${k})` })),
+      cards: [
+        { label: 'có ảnh · chưa thêm', photo: true, nophoto: false, tint: 'var(--c-tint-1)', name: 'Ba chỉ nướng mật ong', desc: 'Ba chỉ heo ướp mật ong, nướng than hoa', price: '89.000 ₫', added: false, notAdded: true, border: 'var(--c-line)' },
+        { label: 'có ảnh · đã thêm', photo: true, nophoto: false, tint: 'var(--c-tint-2)', name: 'Lẩu Thái hải sản', desc: 'Tôm, mực, nghêu, nấm — nồi 2–3 người', price: '249.000 ₫', added: true, notAdded: false, border: 'var(--c-primary)' },
+        { label: 'không ảnh · chưa thêm', photo: false, nophoto: true, cat: 'Hải sản', tint: 'var(--c-tint-3)', name: 'Mực nướng sa tế', desc: 'Mực lá tươi, sa tế cay vừa', price: '129.000 ₫', added: false, notAdded: true, border: 'var(--c-line)' },
+        { label: 'không ảnh · đã thêm', photo: false, nophoto: true, cat: 'Đồ uống', tint: 'var(--c-tint-4)', name: 'Bia Tiger', desc: 'Chai 330ml, ướp lạnh', price: '20.000 ₫', added: true, notAdded: false, border: 'var(--c-primary)' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>
