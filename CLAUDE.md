@@ -12,7 +12,7 @@ Flow: product listing by category → cart → place order → save to DB + push
 
 ## Learner
 - Frontend developer: Next.js, React, HTML/CSS, SEO. Handles all UI work.
-- Backend: **starting from zero**.
+- Backend: **starting from zero**. Has deployed .NET apps on Windows Server before (publish folder + Windows Service/IIS); first time deploying a Node API to a PaaS.
 - macOS, Node >= 22, comfortable with Git.
 
 ## Language rules
@@ -24,7 +24,7 @@ Flow: product listing by category → cart → place order → save to DB + push
 - Learning happens in claude.ai chat, **not Claude Code**. The learner types and runs every command and writes the code.
 - Every step comes with the command/code **and the reason behind it**. Explain "why" before "how".
 - Small steps. Wait for the learner to paste output or errors before moving on. Never dump a whole lesson at once.
-- Relate new concepts to frontend knowledge the learner already has (e.g. Nest middleware vs Next middleware, DTOs vs props types).
+- Relate new concepts to frontend knowledge the learner already has (e.g. Nest middleware vs Next middleware, DTOs vs props types). For deployment, relate to the learner's .NET / Windows Server experience.
 - Each lesson has a **"Done when"** criterion. Commit to Git once it passes, then move to the next lesson.
 - Progress from basics to advanced. Security and performance mostly live in Tier 3; mention briefly if they come up earlier.
 - Be concise and practical.
@@ -33,7 +33,7 @@ Flow: product listing by category → cart → place order → save to DB + push
 ## Tech stack
 | Area | Choice |
 |---|---|
-| Monorepo | pnpm workspaces (add Turborepo once `apps/web` exists) |
+| Monorepo | pnpm workspaces + Turborepo |
 | Backend | NestJS 12 + TypeScript, **ESM** (`"type": "module"`) |
 | Database | MongoDB Atlas M0 (free) + Mongoose |
 | Validation | Zod (`packages/shared`) + `nestjs-zod` |
@@ -42,30 +42,36 @@ Flow: product listing by category → cart → place order → save to DB + push
 | Testing | Vitest + supertest + mongodb-memory-server |
 | Lint / format | oxlint + Prettier (Nest CLI defaults) |
 | Notifications | Telegram Bot API (one shared bot, one `chatId` per store). Zalo later |
-| Frontend (later) | Next.js App Router, Zustand cart, SSG/ISR catalog |
-| Deploy | API: Render free · Web: Vercel/Netlify/Cloudflare · DB: Atlas M0 |
+| Frontend | Next.js 16 App Router (`cacheComponents`), Zustand cart, Tailwind |
+| Deploy (all free) | API: Render free (Singapore) · Storefronts + landing: Cloudflare Pages (Next.js static export) · DB: Atlas M0 |
 
-Render free tier note: the service sleeps after 15 minutes without traffic and cold-starts in 30–60s. The web app calls `/health` when the customer enters checkout to wake the API early.
+Render free tier note: the service sleeps after 15 minutes without traffic and cold-starts in 30–60s. **No keep-alive pinging** (Render staff treat it as abuse of the free tier). Instead the storefront warms up `/health` on home load and again when the cart/order page opens, and order submission uses a 60s timeout with a "connecting to the store…" state and retry with the same `idempotencyKey`.
 
 ## Repository structure
 ```
 kld-commerce-kit/
 ├─ apps/
 │  ├─ api/              # NestJS — deployed once, shared by all stores
-│  └─ web/              # Next.js storefront template (later)
-│     └─ brands/<slug>/ # per-store branding (config, theme, assets)
+│  ├─ web/              # Chú Bảy storefront (renamed to store-chu-bay / store-template when store #2 arrives)
+│  │  └─ brands/<slug>/ # per-store branding (config, theme, assets)
+│  ├─ store-<slug>/     # (later) custom-UI storefronts, one app per store
+│  └─ landing/          # (later) Cà Chua Studio landing page
 ├─ packages/
-│  └─ shared/           # Zod schemas + types shared by api and web
+│  ├─ shared/           # Zod schemas + types shared by api and web (framework-agnostic)
+│  └─ storefront/       # (later) headless storefront logic: api client, cart, hooks (React, no UI)
 └─ seed/
    └─ stores/<slug>.json
 ```
 
 ## Branch & multi-store strategy
+- **Headless storefronts:** most stores get their OWN UI. Shared logic is extracted into `packages/storefront` (React-only, no UI): API client (timeout/retry/idempotency), cart store, hooks (`useCart`, `useCheckout`, `useWarmup`, `useTableMode`, `useMenuFilter`), utils (accent-insensitive search, note composition, JSON-LD). Each custom UI = its own app `apps/store-<slug>` importing those hooks. Stores that accept an existing UI share `apps/store-template` with `STORE_SLUG` + `brands/<slug>/` theming (rules below).
+- Timing: Chú Bảy ships from `apps/web` now; keep logic (`src/lib`, `src/hooks`, `src/stores`) separate from UI components. Extract `packages/storefront` and rename apps when the second store arrives (rule: share code only once a second consumer exists).
+- Pricing implication: template UI (theme only) = cheap/Basic; custom UI = priced separately.
 - Single branch `main`. No per-store branches, no forks.
-- The storefront picks its store through one function, `getStoreSlug()` (reads `STORE_SLUG` env now; can switch to hostname-based multi-tenancy later without touching other code).
-- Per-store branding lives in `apps/web/brands/<slug>/` (config, theme CSS variables, logo, images, optional component overrides). Store data lives in `seed/stores/<slug>.json`.
+- The template storefront picks its store through one function, `getStoreSlug()` (reads `STORE_SLUG` env now; can switch to hostname-based multi-tenancy later without touching other code).
+- Per-store branding lives in `brands/<slug>/` (config, theme CSS variables, logo, images, optional component overrides). Store data lives in `seed/stores/<slug>.json`.
 - Store-specific features are toggled by store config in the DB, never by forking code.
-- Adding a store: seed JSON → `pnpm seed <slug>` → `brands/<slug>/` → new hosting project with `STORE_SLUG` + domain → add domain to API CORS whitelist. No code changes.
+- Adding a template-UI store: seed JSON → `pnpm seed <slug>` → `brands/<slug>/` → new Cloudflare Pages project with `STORE_SLUG` + domain → add domain to `CORS_ORIGINS`. No code changes.
 
 ## Service packages & build modes
 | Package | Runs on | Ordering | Build |
@@ -76,11 +82,39 @@ kld-commerce-kit/
 - Basic: we store no data and run nothing after handover; the customer owns domain + hosting and registers the site with Bộ Công Thương.
 - Care/Pro: we operate the platform and hold customers' personal data — needs a proper contract/terms (legal review before the first paying customer). Domains always registered in the customer's name.
 - Quán Ăn Chú Bảy = Care package (`ORDER_MODE=api`).
-- Hosting note: Vercel Hobby is non-commercial only — use Vercel Pro or a commercial-friendly free host (decide at deploy time). API on Render; upgrade off the free tier at go-live so it doesn't sleep.
+- Hosting (decided: all free for now): see **Deployment**. Upgrade the API to a paid Render instance once a Care customer pays. Vercel Hobby is NOT used (non-commercial only — and a landing page advertising paid services also counts as commercial).
 
 ## Repository plan
-- Now: one private monorepo (`apps/api`, `apps/web`, `packages/shared`; `apps/landing` later).
-- Later (trigger: second customer, or API contract stable for a few weeks): freeze API as `v1`, publish `@kld/shared`, split into a public platform repo (API, landing, shared) and a private clients repo (storefront + customer brands).
+- Now: one private monorepo (`apps/api`, `apps/web`, `packages/shared`; `apps/landing`, `packages/storefront` later).
+- Later (trigger: second customer, or API contract stable for a few weeks): freeze API as `v1`, publish `@kld/shared`, split into a public platform repo (API, landing, shared) and a private clients repo (storefronts + customer brands).
+
+## Deployment (all free for now)
+
+### API → Render (Web Service, runtime Node, region Singapore)
+- Root directory: repo root (pnpm workspace needs the root lockfile).
+- Build command: `corepack enable && pnpm install --frozen-lockfile && pnpm --filter @kld/shared build && pnpm --filter @kld/api build`
+- Start command: `cd apps/api && NODE_ENV=production node dist/main.js`
+  - `NODE_ENV` is set at **runtime only**. If it were a Render env var it would also apply to the build, pnpm would skip devDependencies, and `nest build` (`@nestjs/cli`, `typescript`) would fail.
+- Env vars: `NODE_VERSION=24`, `MONGODB_URI`, `TELEGRAM_BOT_TOKEN`, `CORS_ORIGINS`, `ENABLE_SWAGGER=false`. `PORT` is injected by Render. Recommended: a separate production database (e.g. `kld-commerce-prod`), seeded once from the local machine.
+- Health check path: `/health`. Build filters: `apps/api/**`, `packages/shared/**`, `pnpm-lock.yaml`.
+- Auto-deploy on push to `main`; rollback from the dashboard.
+- Before real customers (Lesson 12 essentials): CORS whitelist, rate limit on `POST /orders` (with `trust proxy` — requests arrive through Render's proxy), helmet, body size limit, Swagger off.
+
+### Storefronts / landing → Cloudflare Pages
+- Next.js static export (`output: 'export'`, `images.unoptimized`; no ISR, middleware or route handlers). URL: `<project>.pages.dev`, custom domains attachable per project.
+- One Pages project per app/store. Build watch paths per project (`apps/<app>/**`, `packages/**`) so unrelated pushes don't burn the free build quota (500 builds/month, 1 concurrent build).
+- The build wakes the API (`/health` with retries) before fetching store + catalog.
+- Menu updates: re-seed production → trigger the project's Cloudflare deploy hook.
+- Every `*.pages.dev` / custom domain must be in the API's `CORS_ORIGINS`.
+- To verify at deploy time: static-export compatibility of `cacheComponents` + `'use cache'` (revalidation has no effect in a static export).
+
+### Deploy steps
+- D1: run the production build locally (`node dist/main.js` with `NODE_ENV=production`) — like publishing and test-running before copying to a server.
+- D2: push to GitHub, create the Render Web Service.
+- D3: env vars, first deploy, read the logs.
+- D4: verify through the real URL (`/health`, catalog, a test order + Telegram).
+- D5: Lesson 12 essentials, push → automatic redeploy (CD).
+- Then: storefront → Cloudflare Pages, end-to-end order test, table QR codes.
 
 ## Data model (MongoDB)
 - **stores**: `slug`, `name`, `active`, plus grouped sub-documents (all optional unless noted):
@@ -129,6 +163,7 @@ If Telegram fails, the order is still saved and the customer still gets a succes
 - Dine-in: "Now" or pick date/time + party size. Delivery: "As soon as possible" or pick date/time; address required.
 - Success view: order code, server total, "the store will call to confirm and explain any deposit".
 - Payment is NOT part of the checkout flow. The store's payment QR (bank info) lives in the store info area (footer / "Payment info" popup).
+- Submission: 60s timeout (covers an API cold start), button disabled while pending, "connecting to the store…" message after ~3s, retry reuses the same `idempotencyKey` (a timed-out request may still have been saved — the retry returns that order instead of duplicating it).
 
 **Table QR (frontend-only feature):**
 - Table QR codes link to the storefront with a short param, e.g. `?t=Ban-02-Sanh-01`.
@@ -161,16 +196,17 @@ Admin, auth, variants/options, inventory, shipping, online payment, customer acc
 - [ ] Lesson 12: Security — helmet, CORS whitelist, rate limiting, body size limit, NoSQL injection prevention, escaping Telegram content, hiding stack traces, secret management.
 - [ ] Lesson 13: Performance — indexes + `explain()`, `lean()`/projection, catalog caching, compression, connection pooling, cold starts.
 - [ ] Lesson 14: Testing — unit tests (pricing, code generation) + e2e tests (supertest + mongodb-memory-server).
-- [ ] Lesson 15: Production — build, deploy to Render, production env, health checks, GitHub Actions CI.
+- [ ] Lesson 15: Production — build, deploy to Render, production env, health checks, GitHub Actions CI. (In progress — see **Deployment**.)
 
 ### Delivery order (decided: ship first, get customers, then iterate)
-1. Phase 1B — storefront for Chú Bảy (`apps/web`, `ORDER_MODE=api`, `brands/chu-bay`), add Turborepo.
-2. Lesson 12 (security) + Lesson 15 (deploy) — required before real customers.
+1. Phase 1B — storefront for Chú Bảy (`apps/web`, `ORDER_MODE=api`, `brands/chu-bay`), add Turborepo. ✅
+2. Lesson 12 essentials + Lesson 15 (deploy) — required before real customers. ← current
 3. Go live for Chú Bảy.
 4. Lessons 13 (performance) + 14 (testing).
 5. `ORDER_MODE=messenger` static build for the Basic package.
-6. `apps/landing` — packages, portfolio, live demos.
-7. API `v1`, publish `@kld/shared`, split repos.
+6. `apps/landing` — packages, portfolio, live demos (Cloudflare Pages).
+7. Second store → extract `packages/storefront`, rename storefront apps.
+8. API `v1`, publish `@kld/shared`, split repos.
 
 ### Phase 1B — Frontend
 Two routes: `/` (store hero ~20–30% + menu) and `/order` (order form + success view).
@@ -188,19 +224,19 @@ Two routes: `/` (store hero ~20–30% + menu) and `/order` (order form + success
 - Selected-items panel: sticky right column on ≥1024px; on mobile a bottom bar that opens the same panel as a bottom sheet. CTA "Order" → `/order`.
 - Styling: Tailwind, brand colors via CSS variables from `brands/<slug>/theme.css`.
 - Server Components by default; client components only for interactive islands (cart, steppers, tabs, search, form).
-- Catalog via SSG/ISR from the API; cart (Zustand + `localStorage`, keyed by store) keeps name/price snapshots for display; server total is authoritative.
+- Catalog fetched at build time (static export on Cloudflare Pages) — menu changes need a rebuild via deploy hook. Cart (Zustand + `localStorage`, keyed by store) keeps name/price snapshots for display; server total is authoritative.
 - `idempotencyKey` created when checkout starts, kept until success; errors handled by `code` (`PRODUCTS_UNAVAILABLE`, `VALIDATION_FAILED`).
-- Warm up `/health` when `/order` opens. SEO: metadata from store + JSON-LD `Restaurant`/`Menu`.
+- Warm up `/health` (fire-and-forget, errors ignored) on home load and when the cart/order page opens. SEO: metadata from store + JSON-LD `Restaurant`/`Menu`.
 - Step 1B.1 is a backend update: new store fields + new order contract.
 
 ### Phase 2
-Second store (proves the kit is reusable) → Admin (JWT, product CRUD, order list, `notified: false` view, image upload) → Telegram confirm button, Zalo, QR with embedded amount.
+Second store (proves the kit is reusable; triggers `packages/storefront` extraction) → Admin (JWT, product CRUD, order list, `notified: false` view, image upload) → Telegram confirm button, Zalo, QR with embedded amount.
 
 ### Phase 3
 Full `orders` collection with status, variants, inventory, shipping, online payment, customer accounts.
 
 ## Progress
-- **Current step:** Phase 1B — storefront built (`apps/web`, Turborepo); next: real store data/images, then Lesson 12 + 15 before go-live
+- **Current step:** Deployment — API to Render, step **D1** (run the production build locally). Then Lesson 12 essentials, then the storefront to Cloudflare Pages.
 - **Decisions log:**
   - Node 24 LTS (`.nvmrc`, `engines`), pnpm pinned via Corepack (`packageManager`).
   - API scaffolded with Nest CLI: ESM + Vitest (instead of CJS + Jest), oxlint instead of ESLint.
@@ -237,3 +273,6 @@ Full `orders` collection with status, variants, inventory, shipping, online paym
   - Product cards with a description open a detail popup (photo, full description, price, add/stepper).
   - Table mode hides everything about calling back: no phone/name fields, no deposit/call-back notes, no "call the store" button on success; Telegram shows "Khách đang ngồi tại quán". `order_requests.phone` is therefore optional.
   - Featured products get a diagonal corner ribbon (text from `brands/<slug>/config.ts` `featuredBadge`; Chú Bảy = "HOT") everywhere except the Featured tab. The tab itself stays named "Món nổi bật".
+  - Headless storefront architecture: shared logic → `packages/storefront` (extracted when store #2 arrives); custom UI per store in `apps/store-<slug>`; template UI + theming for stores that accept an existing design. Template vs custom UI priced differently.
+  - Hosting is all free for now: API on Render free (no keep-alive pinging; warm-up from the storefront instead), storefronts + landing on Cloudflare Pages as static exports (commercial use allowed; one project per app; build watch paths), DB on Atlas M0. Vercel Hobby rejected (non-commercial terms).
+  - Render start command sets `NODE_ENV=production` inline so the build still installs devDependencies.
