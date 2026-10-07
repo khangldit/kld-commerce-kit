@@ -64,6 +64,8 @@ export class TelegramOrderNotifier extends OrderNotifier {
           chat_id: chatId,
           text: this.buildMessage(store, order),
           parse_mode: 'HTML',
+          // The Zalo link would otherwise expand into a big preview card
+          link_preview_options: { is_disabled: true },
         }),
         signal: AbortSignal.timeout(TELEGRAM_TIMEOUT_MS),
       },
@@ -95,7 +97,21 @@ export class TelegramOrderNotifier extends OrderNotifier {
         : `<b>Tổng: ${formatVnd(order.total)}</b>`,
     ];
     if (order.note) lines.push(`📝 ${escapeHtml(order.note)}`);
+    if (order.phone) lines.push('', this.contactLine(order.phone));
     return lines.join('\n');
+  }
+
+  /**
+   * "Liên hệ khách: Zalo - Gọi +84…". Telegram drops `tel:` links in bot
+   * messages, so the call part is the number in international format, which
+   * the Telegram apps detect and make tappable. Zalo is a normal https link.
+   */
+  private contactLine(phone: string): string {
+    // Stored phones are validated as 0xxxxxxxxx or +84xxxxxxxxx
+    const national = phone.startsWith('+84') ? `0${phone.slice(3)}` : phone;
+    const international = `+84${national.slice(1)}`;
+    const zalo = escapeHtml(`https://zalo.me/${national}`);
+    return `Liên hệ khách: <a href="${zalo}">Zalo</a> - Gọi ${escapeHtml(international)}`;
   }
 
   private fulfillmentLines(order: OrderRequest): string[] {
