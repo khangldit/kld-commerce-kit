@@ -1,4 +1,4 @@
-@baseUrl = http://localhost:3000
+@baseUrl = https://kld-commerce-kit.onrender.com
 @store = chu-bay
 @itemA = 6ac26bdec7ea1a1769c5af5d
 @itemB = 6ac26bdec7ea1a1769c5af5e

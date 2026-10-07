@@ -237,7 +237,9 @@ Second store (proves the kit is reusable; triggers `packages/storefront` extract
 Full `orders` collection with status, variants, inventory, shipping, online payment, customer accounts.
 
 ## Progress
-- **Current step:** Deployment — API to Render, step **D1** (run the production build locally). Then Lesson 12 essentials, then the storefront to Cloudflare Pages.
+- **Current step:** Deployment — API is live at `https://kld-commerce-kit.onrender.com` (D1–D3 done). Next: D4 verification, D5 Lesson 12 essentials + fail-fast DB connection, then the storefront to Cloudflare Pages.
+- **TODO before making the repo public:** a Mongo connection string was committed in early history — scrub with `git filter-repo --replace-text` (and rotate the DB password if the repo was pushed before scrubbing).
+- Atlas IP Access List has `0.0.0.0/0` (comment "Render (no static IP)"); the auto-setup entry only allowed the developer's IP, which caused a TLS "alert internal error" (SSL alert 80) on Render.
 - **Decisions log:**
   - Node 24 LTS (`.nvmrc`, `engines`), pnpm pinned via Corepack (`packageManager`).
   - API scaffolded with Nest CLI: ESM + Vitest (instead of CJS + Jest), oxlint instead of ESLint.
