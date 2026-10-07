@@ -92,7 +92,8 @@ kld-commerce-kit/
 
 ### API → Render (Web Service, runtime Node, region Singapore)
 - Root directory: repo root (pnpm workspace needs the root lockfile).
-- Build command: `corepack enable && pnpm install --frozen-lockfile && pnpm --filter @kld/shared build && pnpm --filter @kld/api build`
+- Build command: `COREPACK_ENABLE_DOWNLOAD_PROMPT=0 corepack pnpm install --frozen-lockfile && corepack pnpm --filter @kld/shared build && corepack pnpm --filter @kld/api build`
+  - Not `corepack enable`: it writes shims into `/usr/bin`, which is read-only on Render (`EROFS`). `corepack pnpm …` runs the pinned pnpm version without installing shims.
 - Start command: `cd apps/api && NODE_ENV=production node dist/main.js`
   - `NODE_ENV` is set at **runtime only**. If it were a Render env var it would also apply to the build, pnpm would skip devDependencies, and `nest build` (`@nestjs/cli`, `typescript`) would fail.
 - Env vars: `NODE_VERSION=24`, `MONGODB_URI`, `TELEGRAM_BOT_TOKEN`, `CORS_ORIGINS`, `ENABLE_SWAGGER=false`. `PORT` is injected by Render. Recommended: a separate production database (e.g. `kld-commerce-prod`), seeded once from the local machine.
